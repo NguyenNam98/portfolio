@@ -11,12 +11,24 @@
 #   pnpm deploy:preview     # preview deploy (--branch=preview)
 #
 # Secrets (set once via `wrangler pages secret put <NAME>`):
-#   ANTHROPIC_API_KEY     - day 6-9 (chat endpoint)
-#   SUPABASE_URL          - day 6-9
-#   SUPABASE_ANON_KEY     - day 6-9
-#   TURNSTILE_SECRET_KEY  - day 11 (abuse protection)
+#   ANTHROPIC_API_KEY     - chat endpoint (production + preview)
 
 name = "personal-website"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-05-23"
 compatibility_flags = ["nodejs_compat"]
+
+# KV namespace for rate-limiting the /api/chat endpoint. Counter is
+# per-IP per-day; cleared by KV's TTL (86_400s). Created via
+# `wrangler kv namespace create RATE_LIMIT [--preview]`.
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "41a89728e394465db01edd7fab68f7e1"
+preview_id = "8d69d5be1b774a29bb141d15d5702d67"
+
+# Public, non-secret config. Tweak without redeploying secrets.
+[vars]
+CHAT_MODEL = "claude-haiku-4-5-20251001"
+CHAT_DAILY_LIMIT_PER_IP = "10"
+CHAT_MAX_OUTPUT_TOKENS = "500"
+CHAT_MAX_INPUT_CHARS = "500"

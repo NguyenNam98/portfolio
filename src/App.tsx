@@ -1,3 +1,5 @@
+import Chat from '@/components/Chat'
+
 function App() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
@@ -253,6 +255,22 @@ function App() {
               docker &middot; vnpay
             </p>
           </article>
+        </div>
+      </section>
+
+      {/* ASK (LIVE AI DEMO) */}
+      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
+        <div className="max-w-3xl mx-auto">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-3">
+            ask
+          </p>
+          <p className="text-sm text-neutral-400 leading-relaxed mb-8 max-w-2xl">
+            A small live demo. Ask anything about Nam&rsquo;s work, journey,
+            or how he thinks. The chat below is a real Anthropic Claude call,
+            streamed from a Hono function running on Cloudflare. Token cost
+            and daily-remaining count tick in real time.
+          </p>
+          <Chat />
         </div>
       </section>
 
