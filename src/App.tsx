@@ -17,21 +17,117 @@ function App() {
         </p>
       </section>
 
-      {/*
-        Below this comment, the page is intentionally empty. The shape of
-        the site (what sections, in what order, with what voice) is Nam's
-        design call. The scaffold is here, the deploy pipeline works, the
-        api function is wired. Drop content in when ready.
+      {/* ABOUT */}
+      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
+        <div className="max-w-3xl mx-auto">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-8">
+            about
+          </p>
 
-        Sections that typically belong in a job-hunting engineer's
-        portfolio (use, skip, or reorder as you like):
-          - selected work / case studies
-          - about / journey
-          - skills / what i'm currently into
-          - writing / notes
-          - live demo or interactive piece
-          - contact / hire me
-      */}
+          {/*
+            Pitch paragraph: seeded from resume facts. Edit, rewrite,
+            replace, or delete entirely. Your voice goes here.
+          */}
+          <p className="text-neutral-300 leading-relaxed max-w-2xl mb-12">
+            Software engineer based in Sydney. Five years of production work
+            across backend (NestJS, Postgres), infrastructure (AWS, Terraform,
+            Docker), and most recently mobile (designed, built, and shipped
+            an iOS app solo). Currently leading platform and backend at
+            Sample Assist while finishing a Master&rsquo;s in Computer Science
+            at the University of Wollongong.
+          </p>
+
+          {/* NOW */}
+          <div className="mb-12">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-600 mb-4">
+              now
+            </p>
+            <ul className="space-y-2 text-sm text-neutral-300">
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2023&rarr;
+                </span>
+                <span>
+                  Software Engineer &middot; Sample Assist &middot; Sydney
+                </span>
+              </li>
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2023&rarr;
+                </span>
+                <span>
+                  Master&rsquo;s in Computer Science &middot; University of
+                  Wollongong
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          {/* JOURNEY */}
+          <div className="mb-10">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-600 mb-4">
+              journey
+            </p>
+            <ol className="space-y-3 text-sm text-neutral-400">
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2026
+                </span>
+                <span>
+                  Shipped{' '}
+                  <span className="text-neutral-200 font-medium">Startiny</span>{' '}
+                  to the App Store solo in two weeks
+                </span>
+              </li>
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2023
+                </span>
+                <span>Moved Ho Chi Minh City &rarr; Sydney</span>
+              </li>
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2022
+                </span>
+                <span>
+                  Backend / Cloud Engineer &middot; GGJungle &middot; Ho Chi
+                  Minh City
+                </span>
+              </li>
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2021
+                </span>
+                <span>
+                  Software Engineer &middot; FPT Tan Thuan Telecom &middot; Ho
+                  Chi Minh City
+                </span>
+              </li>
+              <li className="flex gap-5">
+                <span className="text-neutral-600 w-16 shrink-0 font-mono">
+                  2016
+                </span>
+                <span>
+                  BSc Computer Science &middot; UIT, Vietnam National
+                  University
+                </span>
+              </li>
+            </ol>
+          </div>
+
+          {/* RESUME */}
+          <p className="font-mono text-xs">
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="text-neutral-400 hover:text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors"
+            >
+              download resume (pdf) &rarr;
+            </a>
+          </p>
+        </div>
+      </section>
 
       {/* FOOTER */}
       <footer className="px-6 py-12 border-t border-neutral-900">
