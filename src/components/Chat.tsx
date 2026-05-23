@@ -2,9 +2,19 @@ import { useRef, useState } from 'react'
 
 interface Usage {
   readonly inputTokens: number
+  readonly cacheReadTokens: number
+  readonly cacheCreationTokens: number
   readonly outputTokens: number
   readonly remaining: number
 }
+
+// Anthropic Claude Haiku 4.5 pricing (USD per million tokens).
+const PRICING = {
+  input: 1,
+  cacheWrite: 1.25, // ephemeral 5-min cache, 1.25x base input
+  cacheRead: 0.1, // 10% of base input
+  output: 5,
+} as const
 
 const STARTERS: readonly string[] = [
   'What was your biggest production migration?',
@@ -71,7 +81,12 @@ export default function Chat() {
           let payload: {
             type: string
             value?: string
-            usage?: { input_tokens: number; output_tokens: number }
+            usage?: {
+              input_tokens: number
+              output_tokens: number
+              cache_read_input_tokens?: number
+              cache_creation_input_tokens?: number
+            }
             remaining?: number
             message?: string
           }
@@ -85,6 +100,9 @@ export default function Chat() {
           } else if (payload.type === 'done' && payload.usage) {
             setUsage({
               inputTokens: payload.usage.input_tokens,
+              cacheReadTokens: payload.usage.cache_read_input_tokens ?? 0,
+              cacheCreationTokens:
+                payload.usage.cache_creation_input_tokens ?? 0,
               outputTokens: payload.usage.output_tokens,
               remaining: payload.remaining ?? 0,
             })
@@ -102,9 +120,25 @@ export default function Chat() {
   }
 
   const estimatedCost = usage
-    ? ((usage.inputTokens * 1) / 1_000_000 +
-        (usage.outputTokens * 5) / 1_000_000)
+    ? (usage.inputTokens * PRICING.input) / 1_000_000 +
+      (usage.cacheCreationTokens * PRICING.cacheWrite) / 1_000_000 +
+      (usage.cacheReadTokens * PRICING.cacheRead) / 1_000_000 +
+      (usage.outputTokens * PRICING.output) / 1_000_000
     : 0
+
+  // Cost the same request would have cost without prompt caching.
+  // Used to show "you saved $X" when a cache hit occurred.
+  const costWithoutCache = usage
+    ? ((usage.inputTokens +
+        usage.cacheCreationTokens +
+        usage.cacheReadTokens) *
+        PRICING.input) /
+        1_000_000 +
+      (usage.outputTokens * PRICING.output) / 1_000_000
+    : 0
+  const savedByCache = costWithoutCache - estimatedCost
+  const cacheHit = usage ? usage.cacheReadTokens > 0 : false
+  const cacheWrite = usage ? usage.cacheCreationTokens > 0 : false
 
   return (
     <div>
@@ -179,10 +213,25 @@ export default function Chat() {
       )}
 
       {usage && (
-        <p className="font-mono text-[10px] text-neutral-600 uppercase tracking-[0.15em]">
-          in {usage.inputTokens} &middot; out {usage.outputTokens} &middot; $
-          {estimatedCost.toFixed(4)} &middot; {usage.remaining} left today
-        </p>
+        <div className="font-mono text-[10px] text-neutral-600 uppercase tracking-[0.15em] space-y-1">
+          <p>
+            in {usage.inputTokens} &middot; out {usage.outputTokens} &middot; $
+            {estimatedCost.toFixed(4)} &middot; {usage.remaining} left today
+          </p>
+          {cacheHit && (
+            <p className="text-emerald-500/80">
+              cache hit &middot; {usage.cacheReadTokens} tokens read at 10% of
+              input price &middot; saved $
+              {savedByCache.toFixed(4)} vs uncached
+            </p>
+          )}
+          {cacheWrite && !cacheHit && (
+            <p className="text-sky-400/70">
+              cache write &middot; {usage.cacheCreationTokens} tokens cached
+              for next 5 min &middot; subsequent reads will be ~10x cheaper
+            </p>
+          )}
+        </div>
       )}
     </div>
   )
