@@ -115,6 +115,19 @@ function App() {
             </ol>
           </div>
 
+          {/* OPEN TO OPPORTUNITIES */}
+          <p className="text-sm text-neutral-400 leading-relaxed max-w-2xl mb-6">
+            Open to conversations about senior engineering, platform, or
+            AI-engineering roles. The inbox is{' '}
+            <a
+              href="mailto:michalnam98@gmail.com"
+              className="text-neutral-200 underline decoration-neutral-700 underline-offset-4 hover:decoration-neutral-300 transition-colors"
+            >
+              michalnam98@gmail.com
+            </a>
+            .
+          </p>
+
           {/* RESUME */}
           <p className="font-mono text-xs">
             <a
@@ -187,18 +200,95 @@ function App() {
             </p>
           </article>
 
-          {/*
-            More items go here. Strong candidates from your background:
-              - Sample Assist platform: Firebase->Postgres, ECS+ALB,
-                Argo CD GitOps, 200% perf win
-              - GGJungle: coupon feature (+20% sales), VNPAY integration,
-                Japanese client work
-              - FPT: TikTok API + Voice Recognition CAPTCHA, browser extensions
-              - any open-source / personal repos worth featuring
+          {/* Sample Assist platform */}
+          <article className="mb-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 mb-3">
+              2023 &rarr; present &middot; platform engineering
+            </p>
+            <h3 className="text-xl font-medium text-neutral-100 mb-2">
+              Sample Assist Platform
+            </h3>
+            <p className="text-sm text-neutral-300 italic mb-3 max-w-2xl">
+              Production AWS infrastructure for a Sydney health-tech startup.
+            </p>
+            <p className="text-sm text-neutral-400 leading-relaxed mb-4 max-w-2xl">
+              Led the migration off serverless Firebase to a microservices
+              architecture on AWS &mdash; 200% performance improvement, 100+
+              SQL tables migrated to Postgres with zero downtime. Architected
+              the production stack with Terraform across ECS, Fargate, ALB,
+              Redis, Route 53, and RDS. Containerized 15+ services. Built
+              the JWT + 2FA auth service. Established CI/CD via GitHub Actions
+              and Fastlane for two Flutter apps that ship to the App Store.
+              Standardized NestJS project templates across the backend team.
+            </p>
+            <p className="font-mono text-[11px] text-neutral-500">
+              aws &middot; terraform &middot; docker &middot; nestjs &middot;
+              postgres &middot; redis &middot; flutter &middot; github actions
+            </p>
+          </article>
 
-            Pick what to show, in what order. Delete this comment block when
-            this section is fully populated.
-          */}
+          {/* GGJungle */}
+          <article className="mb-12">
+            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 mb-3">
+              2022 &rarr; 2023 &middot; backend &amp; product
+            </p>
+            <h3 className="text-xl font-medium text-neutral-100 mb-2">
+              GGJungle
+            </h3>
+            <p className="text-sm text-neutral-300 italic mb-3 max-w-2xl">
+              Cross-border product engineering for Japanese enterprise
+              customers, out of Ho Chi Minh City.
+            </p>
+            <p className="text-sm text-neutral-400 leading-relaxed mb-4 max-w-2xl">
+              Engineered a coupon feature that drove a 20% sales lift
+              post-release. Integrated VNPAY into the existing credit payment
+              system. Led technical meetings directly with Japanese enterprise
+              customers &mdash; requirements gathering, technical delivery,
+              incident resolution. Implemented the monorepo strategy that
+              centralised source across teams. Established disaster-recovery
+              procedures the company hadn&rsquo;t had before.
+            </p>
+            <p className="font-mono text-[11px] text-neutral-500">
+              nodejs &middot; nestjs &middot; mysql &middot; aws &middot;
+              docker &middot; vnpay
+            </p>
+          </article>
+        </div>
+      </section>
+
+      {/* SKILLS */}
+      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
+        <div className="max-w-3xl mx-auto">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-8">
+            skills
+          </p>
+
+          <dl className="space-y-3 text-sm">
+            {[
+              { label: 'languages', value: 'JavaScript, TypeScript, Python, Bash, SQL' },
+              { label: 'backend', value: 'Node.js, NestJS, Express' },
+              { label: 'frontend', value: 'React, Redux, Flutter' },
+              { label: 'cloud', value: 'AWS (ECS, EKS, Fargate, ALB, Route 53, RDS, SNS), Google Cloud, Cloudflare' },
+              { label: 'infra', value: 'Terraform, Docker, Kubernetes, Argo CD' },
+              { label: 'databases', value: 'PostgreSQL, MySQL, Firebase, Redis' },
+              { label: 'ci / cd', value: 'GitHub Actions, Fastlane' },
+              { label: 'observability', value: 'CloudWatch, Prometheus, Grafana' },
+              { label: 'security', value: 'JWT, 2FA, OAuth, AWS Security Hub' },
+              { label: 'ai', value: 'Anthropic Claude SDK, Cursor, Claude Code, prompt engineering' },
+            ].map((row) => (
+              <div
+                key={row.label}
+                className="flex flex-col md:flex-row md:gap-6"
+              >
+                <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 w-32 shrink-0 pt-1 mb-1 md:mb-0">
+                  {row.label}
+                </dt>
+                <dd className="text-neutral-300 leading-relaxed">
+                  {row.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
         </div>
       </section>
 
