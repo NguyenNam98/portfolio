@@ -36,9 +36,15 @@ Set per-environment via wrangler when each is needed:
 
 ```bash
 pnpm exec wrangler pages secret put ANTHROPIC_API_KEY --project-name personal-website
-pnpm exec wrangler pages secret put SUPABASE_URL --project-name personal-website
-pnpm exec wrangler pages secret put SUPABASE_ANON_KEY --project-name personal-website
-pnpm exec wrangler pages secret put TURNSTILE_SECRET_KEY --project-name personal-website
+```
+
+**Gotcha:** Pages Functions don't always pick up newly-set secrets at
+runtime &mdash; the running deployment can keep returning `not_configured`
+errors. Always follow `secret put` with a fresh deploy:
+
+```bash
+pnpm exec wrangler pages secret put ANTHROPIC_API_KEY --project-name personal-website
+pnpm deploy:prod   # <-- required to make the secret visible
 ```
 
 ## Project layout
