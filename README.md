@@ -1,48 +1,62 @@
 # personal-website
 
-Van Nam Nguyen &mdash; engineer portfolio. Built as a "Team of One" multi-agent system.
-
-Tagline: _same FinOps muscle, two substrates &mdash; AWS and LLMs._
+Van Nam Nguyen &mdash; personal site.
 
 ## Stack
 
 - **Frontend:** Vite + React 19 + TypeScript + Tailwind v4
 - **API:** Hono on Cloudflare Pages Functions
-- **Vector DB:** Supabase pgvector
-- **Rate-limit state:** Cloudflare KV
-- **LLM:** Anthropic API (Claude Sonnet / Haiku)
-- **Host:** Cloudflare Pages
+- **Host:** Cloudflare Pages (project `personal-website` under michalnam98@gmail.com)
+- **Production URL:** https://personal-website-7h5.pages.dev
+- **Custom domain (planned):** `nam.rosentech.online` (wire via dashboard)
 
 ## Dev
 
 ```bash
 pnpm install
-pnpm dev            # Vite dev server at http://localhost:5173
-pnpm dev:pages      # local Pages Functions runtime (after pnpm build)
-pnpm typecheck
+pnpm dev               # vite dev server (http://localhost:5173)
+pnpm dev:pages         # local cloudflare pages runtime (after pnpm build)
+pnpm typecheck         # app + worker tsconfigs
+pnpm build             # production bundle to dist/
 ```
 
 ## Deploy
 
-Push to `main` &rarr; Cloudflare Pages auto-deploys via GitHub integration.
-
-Manual deploy:
-
 ```bash
-pnpm deploy
+pnpm deploy:prod       # production (--branch=main)
+pnpm deploy:preview    # preview (--branch=preview)
+pnpm tail              # live logs from cloudflare
 ```
 
-## v1 Roadmap
+Manual cli deploy, no git integration (matches the startiny-landing pattern).
 
-| | What ships |
-|---|---|
-| v1   (week 2) | Single `nam-finops` chat &middot; 3 war stories &middot; cost-curve hero &middot; AWS bill index &middot; About + Now |
-| v1.1 (week 4) | Add `nam-infra` agent |
-| v1.2 (week 6) | Add `nam-ai-eng` agent &middot; skill registry |
-| v1.3 (week 8) | Migrate hosting to self-provisioned AWS &middot; configs visible |
-| v1.4 (week 10) | Publish `promptcache-meter` OSS tool |
-| v2.0 (week 12) | Full Team of One |
+## Secrets
 
-## Design doc
+Set per-environment via wrangler when each is needed:
 
-`~/.gstack/projects/personal-website/nguyennam-no-branch-design-20260523-142938.md`
+```bash
+pnpm exec wrangler pages secret put ANTHROPIC_API_KEY --project-name personal-website
+pnpm exec wrangler pages secret put SUPABASE_URL --project-name personal-website
+pnpm exec wrangler pages secret put SUPABASE_ANON_KEY --project-name personal-website
+pnpm exec wrangler pages secret put TURNSTILE_SECRET_KEY --project-name personal-website
+```
+
+## Project layout
+
+```
+.
+|-- index.html
+|-- vite.config.ts
+|-- wrangler.toml
+|-- tsconfig.json              # app: DOM + node types
+|-- tsconfig.worker.json       # functions: cloudflare workers-types
+|-- src/                       # react app
+|   |-- App.tsx
+|   |-- main.tsx
+|   |-- index.css
+|   `-- vite-env.d.ts
+|-- functions/                 # cloudflare pages functions (api surface)
+|   `-- api/[[catchall]].ts    # hono app
+|-- resume/                    # cv pdf + photo
+`-- dist/                      # build output (gitignored)
+```
