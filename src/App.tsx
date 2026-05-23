@@ -4,17 +4,43 @@ function App() {
   return (
     <main className="min-h-screen bg-neutral-950 text-neutral-100">
       {/* HERO */}
-      <section className="px-6 pt-24 pb-20 md:pt-32 md:pb-24 max-w-3xl mx-auto">
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-6">
-          v0.1.0 &middot; scaffold
+      <section className="px-6 pt-16 pb-12 md:pt-24 md:pb-16 max-w-3xl mx-auto">
+        {/* Availability badge with live pulse */}
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 inline-flex items-center gap-2 text-emerald-400/90">
+          <span className="relative inline-flex h-2 w-2">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+          </span>
+          <span>available &middot; sydney &middot; remote ok</span>
         </p>
-        <h1 className="text-3xl md:text-5xl font-medium tracking-tight mb-3">
+
+        {/* Name */}
+        <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-3">
           Van Nam Nguyen
         </h1>
-        <p className="text-lg text-neutral-400 mb-2">
-          Software Engineer &middot; Sydney
+
+        {/* One-line tagline */}
+        <p className="text-lg md:text-xl text-neutral-300 leading-snug mb-3 max-w-2xl">
+          Software engineer building end-to-end across backend, infrastructure,
+          and mobile.
         </p>
-        <p className="font-mono text-sm text-neutral-500">
+
+        {/* Proof caption — concrete, above the fold */}
+        <p className="font-mono text-[11px] md:text-xs text-neutral-500 leading-relaxed mb-10">
+          currently at sample assist &middot; 5+ yrs production &middot;
+          solo-shipped startiny to app store in 14 days (may 2026)
+        </p>
+
+        {/* THE WOW: chat embedded directly in hero */}
+        <div className="mb-10">
+          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500 mb-3">
+            &darr; ask the chat &mdash; it knows me well enough
+          </p>
+          <Chat />
+        </div>
+
+        {/* Identity stripe — small, bottom of hero */}
+        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600">
           backend &middot; frontend &middot; infra &middot; mobile &middot; ai
         </p>
       </section>
@@ -255,22 +281,6 @@ function App() {
               docker &middot; vnpay
             </p>
           </article>
-        </div>
-      </section>
-
-      {/* ASK (LIVE AI DEMO) */}
-      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
-        <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-3">
-            ask
-          </p>
-          <p className="text-sm text-neutral-400 leading-relaxed mb-8 max-w-2xl">
-            A small live demo. Ask anything about Nam&rsquo;s work, journey,
-            or how he thinks. The chat below is a real Anthropic Claude call,
-            streamed from a Hono function running on Cloudflare. Token cost
-            and daily-remaining count tick in real time.
-          </p>
-          <Chat />
         </div>
       </section>
 
