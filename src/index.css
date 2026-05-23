@@ -1,19 +1,349 @@
 @import "tailwindcss";
 
-@theme {
-  --font-mono: ui-monospace, "JetBrains Mono", SFMono-Regular, Menlo, monospace;
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Inter", sans-serif;
+/* =============================================================
+   DigiWize Design System — tokens
+   Lifted from Figma (Digiwize Design System.fig) 2026-04 via the
+   design/ prototype. Tailwind v4 utility classes still work; these
+   tokens layer on top for typography, color semantics, and motion.
+   ============================================================= */
+
+/* ---------- Fonts -------------------------------------------- */
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("/fonts/HankenGrotesk-VariableFont_wght.ttf") format("truetype-variations"),
+       url("/fonts/HankenGrotesk-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Hanken Grotesk";
+  src: url("/fonts/HankenGrotesk-Italic-VariableFont_wght.ttf") format("truetype-variations"),
+       url("/fonts/HankenGrotesk-Italic-VariableFont_wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
 }
 
+:root {
+  /* ============================================================
+     PRIMITIVE COLORS
+     ============================================================ */
+  --dw-white:        #ffffff;
+  --dw-white-2:      #fdfdfd;
+  --dw-gray-5:       #f7f8f8;
+  --dw-gray-10:      #f3f4f6;
+  --dw-gray-15:      #ebedf0;
+  --dw-gray-20:      #e4e4e4;
+  --dw-gray-25:      #e1e1e1;
+  --dw-gray-30:      #d9d9d9;
+  --dw-gray-35:      #c6c6c6;
+  --dw-gray-40:      #9ca3af;
+  --dw-gray-50:      #8e8e8e;
+  --dw-gray-55:      #7f8e9d;
+  --dw-gray-60:      #6b7280;
+  --dw-gray-65:      #60646c;
+  --dw-gray-70:      #545454;
+  --dw-gray-75:      #4b5767;
+  --dw-gray-80:      #393939;
+  --dw-gray-85:      #3a3a3a;
+  --dw-gray-90:      #1e1e1e;
+  --dw-gray-95:      #161616;
+  --dw-ink:          #09090b;
+  --dw-black:        #000000;
+
+  --dw-rose:         #e04c71;
+  --dw-rose-soft:    #fb7185;
+  --dw-coral:        #ff5c5c;
+  --dw-coral-soft:   #ff7777;
+
+  --dw-green:        #699970;
+  --dw-mint:         #5bc0b0;
+  --dw-mint-2:       #05aa85;
+  --dw-mint-light:   #b5f5a8;
+  --dw-blue:         #2563eb;
+  --dw-blue-sky:     #7dd3fc;
+  --dw-purple:       #9747ff;
+  --dw-gold:         #a39243;
+  --dw-olive:        #4f4c00;
+  --dw-brown:        #572c21;
+  --dw-violet:       #7161ff;
+  --dw-teal:         #0e8a7c;
+  --dw-danger:       #dc2626;
+
+  /* ============================================================
+     SEMANTIC SURFACE TOKENS — Light theme (default)
+     ============================================================ */
+  --bg-default:           var(--dw-white);
+  --bg-raised:            var(--dw-white-2);
+  --bg-subtle:            var(--dw-gray-10);
+  --bg-hover:             rgba(142,142,142,0.12);
+  --bg-active:            rgba(142,142,142,0.50);
+  --bg-selected:          rgba(142,142,142,0.20);
+  --bg-selected-hover:    rgba(142,142,142,0.32);
+  --bg-inverse:           var(--dw-gray-80);
+  --bg-inverse-hover:     #4c4c4c;
+  --bg-brand:             var(--dw-rose);
+  --bg-brand-hover:       #c73f62;
+  --bg-glass:             rgba(237,237,237,0.83);
+
+  --fg-primary:        var(--dw-gray-95);
+  --fg-secondary:      var(--dw-gray-70);
+  --fg-tertiary:       var(--dw-gray-50);
+  --fg-muted:          var(--dw-gray-40);
+  --fg-on-inverse:     var(--dw-white-2);
+  --fg-on-brand:       var(--dw-white);
+  --fg-link:           var(--dw-blue);
+  --fg-danger:         var(--dw-danger);
+  --fg-success:        var(--dw-mint-2);
+  --fg-placeholder:    var(--dw-gray-40);
+
+  --border-subtle:     var(--dw-gray-30);
+  --border-default:    var(--dw-gray-35);
+  --border-strong:     var(--dw-gray-70);
+  --border-focus:      var(--dw-purple);
+  --border-brand:      var(--dw-rose);
+  --border-danger:     var(--dw-danger);
+
+  --field-bg:          var(--dw-gray-10);
+  --field-bg-hover:    var(--dw-gray-15);
+  --field-bg-active:   var(--dw-white);
+  --field-border:      var(--dw-gray-30);
+  --field-border-hover:var(--dw-gray-60);
+
+  /* ============================================================
+     TYPE
+     ============================================================ */
+  --font-display:      "Geist Mono", "JetBrains Mono", ui-monospace, monospace;
+  --font-sans:         "Hanken Grotesk", "Inter", system-ui, -apple-system, sans-serif;
+  --font-ui:           "Inter", "Hanken Grotesk", system-ui, sans-serif;
+  --font-geist:        "Geist", "Inter", system-ui, sans-serif;
+  --font-mono:         "IBM Plex Mono", "Geist Mono", "SF Mono", ui-monospace, monospace;
+
+  --font-h1:       600 32px/40px var(--font-sans);
+  --font-h2:       600 24px/34px var(--font-sans);
+  --font-h3:       600 20px/28px var(--font-sans);
+  --font-body-l:   400 16px/24px var(--font-sans);
+  --font-body-s:   400 14px/20px var(--font-sans);
+  --font-caption:  400 12px/16px var(--font-sans);
+  --font-label:    500 11px/16px var(--font-sans);
+  --font-mono-s:   400 12px/16px var(--font-mono);
+  --font-mono-xs:  400 11px/16px var(--font-mono);
+  --font-wordmark: 700 128px/100% var(--font-display);
+
+  /* ============================================================
+     SPACING (4-based)
+     ============================================================ */
+  --space-1:   4px;
+  --space-1-5: 6px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-12:  48px;
+  --space-16:  64px;
+
+  /* ============================================================
+     RADII
+     ============================================================ */
+  --radius-xs:    4px;
+  --radius-sm:    5px;
+  --radius-md:    8px;
+  --radius-lg:    12px;
+  --radius-xl:    16px;
+  --radius-2xl:   20px;
+  --radius-card:  25px;
+  --radius-pill:  999px;
+
+  /* ============================================================
+     ELEVATION
+     ============================================================ */
+  --elev-hairline:       inset 0 0 0 1px var(--border-default);
+  --elev-hairline-soft:  inset 0 0 0 1px var(--border-subtle);
+  --elev-top-hairline:   inset 0 1px 0 0 var(--border-default);
+  --elev-1:   0 1px 2px rgba(0,0,0,0.04), 0 1px 1px rgba(0,0,0,0.02);
+  --elev-2:   0 2px 8px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --elev-3:   0 12px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.05);
+  --elev-focus: 0 0 0 2px var(--dw-white), 0 0 0 4px var(--dw-purple);
+
+  /* ============================================================
+     MOTION
+     ============================================================ */
+  --motion-fast:   120ms;
+  --motion-med:    180ms;
+  --motion-slow:   260ms;
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.2, 1);
+  --ease-emphatic: cubic-bezier(0.3, 0.0, 0.0, 1);
+}
+
+/* =============================================================
+   DARK THEME — opt in with [data-theme="dark"] on any ancestor
+   (CSS supported; no UI toggle in v2)
+   ============================================================= */
+[data-theme="dark"] {
+  --bg-default:           var(--dw-ink);
+  --bg-raised:            var(--dw-gray-95);
+  --bg-subtle:            var(--dw-gray-90);
+  --bg-hover:             rgba(255,255,255,0.08);
+  --bg-active:            rgba(255,255,255,0.16);
+  --bg-selected:          rgba(255,255,255,0.12);
+  --bg-selected-hover:    rgba(255,255,255,0.20);
+  --bg-inverse:           var(--dw-gray-10);
+  --bg-inverse-hover:     var(--dw-white);
+  --bg-glass:             rgba(30,30,30,0.72);
+
+  --fg-primary:           var(--dw-white);
+  --fg-secondary:         var(--dw-gray-40);
+  --fg-tertiary:          var(--dw-gray-50);
+  --fg-muted:             var(--dw-gray-60);
+  --fg-on-inverse:        var(--dw-gray-95);
+
+  --border-subtle:        rgba(255,255,255,0.08);
+  --border-default:       rgba(255,255,255,0.14);
+  --border-strong:        rgba(255,255,255,0.32);
+
+  --field-bg:             var(--dw-gray-90);
+  --field-bg-hover:       var(--dw-gray-85);
+  --field-bg-active:      var(--dw-gray-95);
+  --field-border:         rgba(255,255,255,0.14);
+  --field-border-hover:   rgba(255,255,255,0.32);
+
+  --elev-focus: 0 0 0 2px var(--dw-ink), 0 0 0 4px var(--dw-purple);
+}
+
+/* =============================================================
+   Base body
+   ============================================================= */
 html,
-body {
+body,
+#root {
   height: 100%;
+  margin: 0;
 }
 
 body {
   font-family: var(--font-sans);
+  background: var(--bg-default);
+  color: var(--fg-primary);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+* { box-sizing: border-box; }
+button { font-family: inherit; }
+input, textarea { font-family: inherit; }
+
+/* Focus ring — uses the DigiWize --elev-focus token. Scoped to
+   buttons / links / tabs only. Textareas and inputs are visually
+   parented to a container that signals focus via border-color, so
+   stacking a box-shadow ring on them would double-cue. */
+:focus { outline: none; }
+button:focus-visible,
+a:focus-visible,
+[role="button"]:focus-visible,
+[role="tab"]:focus-visible {
+  outline: none;
+  box-shadow: var(--elev-focus);
+  border-radius: 4px;
+}
+
+/* Chat layout responsiveness:
+   - Desktop (≥720px): sidebar visible, mobile bar hidden.
+   - Mobile  (<720px): sidebar hidden, slim top bar visible.
+   The mobile bar carries Home + JD access so trapped-in-chat is impossible. */
+.chat-mobile-bar { display: none; }
+@media (max-width: 720px) {
+  .chat-sidebar    { display: none !important; }
+  .chat-mobile-bar { display: flex !important; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb {
+  background: var(--bg-active);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-track { background: transparent; }
+
+/* =============================================================
+   Keyframes (named with nam- prefix to avoid Tailwind collisions)
+   ============================================================= */
+@keyframes nam-dot {
+  0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+  30% { transform: translateY(-3px); opacity: 1; }
+}
+@keyframes nam-fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nam-fade-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nam-rise {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes nam-pop {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { opacity: 1; transform: scale(1.04); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes nam-bubble-in-left {
+  from { opacity: 0; transform: translate(-8px, 6px) scale(0.96); }
+  to   { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+@keyframes nam-bubble-in-right {
+  from { opacity: 0; transform: translate(8px, 6px) scale(0.96); }
+  to   { opacity: 1; transform: translate(0, 0) scale(1); }
+}
+@keyframes nam-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes nam-marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+@keyframes nam-pulse {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  70%  { box-shadow: 0 0 0 8px transparent; }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes nam-caret {
+  0%, 49%   { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+@keyframes nam-grow-x {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+/* Respect reduced motion. Halt infinite/looping animations entirely
+   (asterisk spin, marquee scroll, blinking caret, pulsing dot, dot
+   bouncer) while keeping fade-in entries as a near-instant settle so
+   layout doesn't feel broken. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  /* Cancel infinite animations outright (not just shorten one cycle) */
+  [style*="nam-spin"],
+  [style*="nam-marquee"],
+  [style*="nam-caret"],
+  [style*="nam-pulse"],
+  [style*="nam-dot"] {
+    animation: none !important;
+  }
 }

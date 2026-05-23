@@ -1,358 +1,520 @@
-import Chat from '@/components/Chat'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-function App() {
+import { PITCH, PROFILE, PROJECTS, SKILL_GROUPS } from '@/data/profile'
+import { FOLLOWUPS, looksLikeJD, type JDMatchResult, type QuickAction } from '@/data/prompts'
+import ChatView, { type ChatMessage } from '@/components/chat/ChatView'
+import Hero from '@/components/hero/Hero'
+import JDModal from '@/components/JDModal'
+import JDMatchCard from '@/components/cards/JDMatchCard'
+import PitchCard from '@/components/cards/PitchCard'
+import ProjectsShowcase from '@/components/cards/ProjectsShowcase'
+import SkillsCard from '@/components/cards/SkillsCard'
+
+const NAM_LABEL = 'Nam'
+const HR_LABEL = 'Recruiter'
+
+const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
+
+function makeId(prefix: string): string {
+  return `${prefix}-${crypto.randomUUID?.() ?? Math.random().toString(36).slice(2)}`
+}
+
+function idForFollowup(label: string): QuickAction['id'] | 'default' {
+  const x = label.toLowerCase()
+  if (x.includes('resume') || x.includes('cv')) return 'resume'
+  if (x.includes('skill')) return 'skills'
+  if (x.includes('project')) return 'projects'
+  if (x.includes('hire') || x.includes('pitch') || x.includes('30')) return 'pitch'
+  if (x.includes('jd') || x.includes('description')) return 'jd'
+  if (x.includes('touch') || x.includes('contact')) return 'contact'
+  return 'default'
+}
+
+const contactLinkStyle = {
+  color: 'var(--fg-primary)',
+  textDecoration: 'underline',
+  textUnderlineOffset: 3,
+} as const
+
+function ContactBlock() {
   return (
-    <main className="min-h-screen bg-neutral-950 text-neutral-100">
-      {/* HERO */}
-      <section className="px-6 pt-16 pb-12 md:pt-24 md:pb-16 max-w-3xl mx-auto">
-        {/* Availability badge with live pulse */}
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] mb-6 inline-flex items-center gap-2 text-emerald-400/90">
-          <span className="relative inline-flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60 animate-ping" />
-            <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-          </span>
-          <span>available &middot; sydney &middot; remote ok</span>
-        </p>
-
-        {/* Name */}
-        <h1 className="text-4xl md:text-6xl font-medium tracking-tight mb-3">
-          Van Nam Nguyen
-        </h1>
-
-        {/* One-line tagline */}
-        <p className="text-lg md:text-xl text-neutral-300 leading-snug mb-3 max-w-2xl">
-          Software engineer building end-to-end across backend, infrastructure,
-          and mobile.
-        </p>
-
-        {/* Proof caption — concrete, above the fold */}
-        <p className="font-mono text-[11px] md:text-xs text-neutral-500 leading-relaxed mb-10">
-          currently at sample assist &middot; 5+ yrs production &middot;
-          solo-shipped startiny to app store in 14 days (may 2026)
-        </p>
-
-        {/* THE WOW: chat embedded directly in hero */}
-        <div className="mb-10">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-500 mb-3">
-            &darr; ask the chat &mdash; it knows me well enough
-          </p>
-          <Chat />
-        </div>
-
-        {/* Identity stripe — small, bottom of hero */}
-        <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600">
-          backend &middot; frontend &middot; infra &middot; mobile &middot; ai
-        </p>
-      </section>
-
-      {/* ABOUT */}
-      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
-        <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-8">
-            about
-          </p>
-
-          {/*
-            Pitch paragraph: seeded from resume facts. Edit, rewrite,
-            replace, or delete entirely. Your voice goes here.
-          */}
-          <p className="text-neutral-300 leading-relaxed max-w-2xl mb-12">
-            Software engineer based in Sydney. Five years of production work
-            across backend (NestJS, Postgres), infrastructure (AWS, Terraform,
-            Docker), and most recently mobile (designed, built, and shipped
-            an iOS app solo). Currently leading platform and backend at
-            Sample Assist while finishing a Master&rsquo;s in Computer Science
-            at the University of Wollongong.
-          </p>
-
-          {/* NOW */}
-          <div className="mb-12">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-600 mb-4">
-              now
-            </p>
-            <ul className="space-y-2 text-sm text-neutral-300">
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2023&rarr;
-                </span>
-                <span>
-                  Software Engineer &middot; Sample Assist &middot; Sydney
-                </span>
-              </li>
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2023&rarr;
-                </span>
-                <span>
-                  Master&rsquo;s in Computer Science &middot; University of
-                  Wollongong
-                </span>
-              </li>
-            </ul>
-          </div>
-
-          {/* JOURNEY */}
-          <div className="mb-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-neutral-600 mb-4">
-              journey
-            </p>
-            <ol className="space-y-3 text-sm text-neutral-400">
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2026
-                </span>
-                <span>
-                  Shipped{' '}
-                  <span className="text-neutral-200 font-medium">Startiny</span>{' '}
-                  to the App Store solo in two weeks
-                </span>
-              </li>
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2023
-                </span>
-                <span>Moved Ho Chi Minh City &rarr; Sydney</span>
-              </li>
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2022
-                </span>
-                <span>
-                  Backend / Cloud Engineer &middot; GGJungle &middot; Ho Chi
-                  Minh City
-                </span>
-              </li>
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2021
-                </span>
-                <span>
-                  Software Engineer &middot; FPT Tan Thuan Telecom &middot; Ho
-                  Chi Minh City
-                </span>
-              </li>
-              <li className="flex gap-5">
-                <span className="text-neutral-600 w-16 shrink-0 font-mono">
-                  2016
-                </span>
-                <span>
-                  BSc Computer Science &middot; UIT, Vietnam National
-                  University
-                </span>
-              </li>
-            </ol>
-          </div>
-
-          {/* OPEN TO OPPORTUNITIES */}
-          <p className="text-sm text-neutral-400 leading-relaxed max-w-2xl mb-6">
-            Open to conversations about senior engineering, platform, or
-            AI-engineering roles. The inbox is{' '}
-            <a
-              href="mailto:michalnam98@gmail.com"
-              className="text-neutral-200 underline decoration-neutral-700 underline-offset-4 hover:decoration-neutral-300 transition-colors"
-            >
-              michalnam98@gmail.com
-            </a>
-            .
-          </p>
-
-          {/* RESUME */}
-          <p className="font-mono text-xs">
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noreferrer"
-              className="text-neutral-400 hover:text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors"
-            >
-              download resume (pdf) &rarr;
-            </a>
-          </p>
-        </div>
-      </section>
-
-      {/* SELECTED WORK */}
-      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
-        <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-10">
-            selected work
-          </p>
-
-          {/*
-            Pattern per item:
-              <p>  meta line: year + medium (font-mono, neutral-600)
-              <h3> title (text-xl, neutral-100)
-              <p>  tagline (italic, neutral-300)
-              <p>  description (neutral-400, max-w-2xl)
-              <p>  links (font-mono, separated by space-x-5)
-
-            To add another item, duplicate the <article> block below and
-            replace the year, title, tagline, description, and links.
-            Reverse-chronological order looks best.
-          */}
-
-          {/* Startiny */}
-          <article className="mb-12">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 mb-3">
-              2026 &middot; iOS app
-            </p>
-            <h3 className="text-xl font-medium text-neutral-100 mb-2">
-              Startiny
-            </h3>
-            <p className="text-sm text-neutral-300 italic mb-3 max-w-2xl">
-              The to-do app for brains that freeze when the task is too big.
-            </p>
-            <p className="text-sm text-neutral-400 leading-relaxed mb-4 max-w-2xl">
-              iOS productivity app for ADHD brains. AI breaks any task into
-              10-30 minute steps so &ldquo;start&rdquo; isn&rsquo;t the hardest
-              part. Designed, built, and shipped to the App Store solo in
-              two weeks (May 2026). Backed by a Cloudflare Worker proxying
-              Claude calls so the API key never ships in the mobile bundle.
-            </p>
-            <p className="font-mono text-xs space-x-5">
-              <a
-                href="https://apps.apple.com/app/startiny/id6762548413"
-                target="_blank"
-                rel="noreferrer"
-                className="text-neutral-400 hover:text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors"
-              >
-                app store &rarr;
-              </a>
-              <a
-                href="https://startiny.rosentech.online"
-                target="_blank"
-                rel="noreferrer"
-                className="text-neutral-400 hover:text-neutral-100 underline decoration-neutral-700 underline-offset-4 transition-colors"
-              >
-                landing page &rarr;
-              </a>
-            </p>
-          </article>
-
-          {/* Sample Assist platform */}
-          <article className="mb-12">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 mb-3">
-              2023 &rarr; present &middot; platform engineering
-            </p>
-            <h3 className="text-xl font-medium text-neutral-100 mb-2">
-              Sample Assist Platform
-            </h3>
-            <p className="text-sm text-neutral-300 italic mb-3 max-w-2xl">
-              Production AWS infrastructure for a Sydney health-tech startup.
-            </p>
-            <p className="text-sm text-neutral-400 leading-relaxed mb-4 max-w-2xl">
-              Led the migration off serverless Firebase to a microservices
-              architecture on AWS &mdash; 200% performance improvement, 100+
-              SQL tables migrated to Postgres with zero downtime. Architected
-              the production stack with Terraform across ECS, Fargate, ALB,
-              Redis, Route 53, and RDS. Containerized 15+ services. Built
-              the JWT + 2FA auth service. Established CI/CD via GitHub Actions
-              and Fastlane for two Flutter apps that ship to the App Store.
-              Standardized NestJS project templates across the backend team.
-            </p>
-            <p className="font-mono text-[11px] text-neutral-500">
-              aws &middot; terraform &middot; docker &middot; nestjs &middot;
-              postgres &middot; redis &middot; flutter &middot; github actions
-            </p>
-          </article>
-
-          {/* GGJungle */}
-          <article className="mb-12">
-            <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 mb-3">
-              2022 &rarr; 2023 &middot; backend &amp; product
-            </p>
-            <h3 className="text-xl font-medium text-neutral-100 mb-2">
-              GGJungle
-            </h3>
-            <p className="text-sm text-neutral-300 italic mb-3 max-w-2xl">
-              Cross-border product engineering for Japanese enterprise
-              customers, out of Ho Chi Minh City.
-            </p>
-            <p className="text-sm text-neutral-400 leading-relaxed mb-4 max-w-2xl">
-              Engineered a coupon feature that drove a 20% sales lift
-              post-release. Integrated VNPAY into the existing credit payment
-              system. Led technical meetings directly with Japanese enterprise
-              customers &mdash; requirements gathering, technical delivery,
-              incident resolution. Implemented the monorepo strategy that
-              centralised source across teams. Established disaster-recovery
-              procedures the company hadn&rsquo;t had before.
-            </p>
-            <p className="font-mono text-[11px] text-neutral-500">
-              nodejs &middot; nestjs &middot; mysql &middot; aws &middot;
-              docker &middot; vnpay
-            </p>
-          </article>
-        </div>
-      </section>
-
-      {/* SKILLS */}
-      <section className="px-6 py-16 md:py-20 border-t border-neutral-900">
-        <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-500 mb-8">
-            skills
-          </p>
-
-          <dl className="space-y-3 text-sm">
-            {[
-              { label: 'languages', value: 'JavaScript, TypeScript, Python, Bash, SQL' },
-              { label: 'backend', value: 'Node.js, NestJS, Express' },
-              { label: 'frontend', value: 'React, Redux, Flutter' },
-              { label: 'cloud', value: 'AWS (ECS, EKS, Fargate, ALB, Route 53, RDS, SNS), Google Cloud, Cloudflare' },
-              { label: 'infra', value: 'Terraform, Docker, Kubernetes, Argo CD' },
-              { label: 'databases', value: 'PostgreSQL, MySQL, Firebase, Redis' },
-              { label: 'ci / cd', value: 'GitHub Actions, Fastlane' },
-              { label: 'observability', value: 'CloudWatch, Prometheus, Grafana' },
-              { label: 'security', value: 'JWT, 2FA, OAuth, AWS Security Hub' },
-              { label: 'ai', value: 'Anthropic Claude SDK, Cursor, Claude Code, prompt engineering' },
-            ].map((row) => (
-              <div
-                key={row.label}
-                className="flex flex-col md:flex-row md:gap-6"
-              >
-                <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-neutral-600 w-32 shrink-0 pt-1 mb-1 md:mb-0">
-                  {row.label}
-                </dt>
-                <dd className="text-neutral-300 leading-relaxed">
-                  {row.value}
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </section>
-
-      {/* FOOTER */}
-      <footer className="px-6 py-12 border-t border-neutral-900">
-        <div className="max-w-3xl mx-auto">
-          <p className="font-mono text-xs text-neutral-600 leading-relaxed">
-            <a
-              className="hover:text-neutral-300 underline decoration-neutral-800 underline-offset-4 transition-colors"
-              href="https://github.com/NguyenNam98"
-              target="_blank"
-              rel="noreferrer"
-            >
-              github
-            </a>{' '}
-            &middot;{' '}
-            <a
-              className="hover:text-neutral-300 underline decoration-neutral-800 underline-offset-4 transition-colors"
-              href="https://linkedin.com/in/nam-nguyen98"
-              target="_blank"
-              rel="noreferrer"
-            >
-              linkedin
-            </a>{' '}
-            &middot;{' '}
-            <a
-              className="hover:text-neutral-300 underline decoration-neutral-800 underline-offset-4 transition-colors"
-              href="mailto:michalnam98@gmail.com"
-            >
-              email
-            </a>
-          </p>
-        </div>
-      </footer>
-    </main>
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div>Easiest ways to reach me:</div>
+      <div style={{ display: 'grid', gap: 6 }}>
+        <a href={`mailto:${PROFILE.email}`} style={contactLinkStyle}>
+          📧 {PROFILE.email}
+        </a>
+        <a
+          href={`tel:${PROFILE.phone.replace(/\s/g, '')}`}
+          style={contactLinkStyle}
+        >
+          📞 {PROFILE.phone}
+        </a>
+        <a
+          href={`https://${PROFILE.linkedin}`}
+          target="_blank"
+          rel="noreferrer"
+          style={contactLinkStyle}
+        >
+          🔗 {PROFILE.linkedin}
+        </a>
+        <a
+          href={`https://${PROFILE.github}`}
+          target="_blank"
+          rel="noreferrer"
+          style={contactLinkStyle}
+        >
+          🐙 {PROFILE.github}
+        </a>
+        <a href="/resume.pdf" target="_blank" rel="noreferrer" style={contactLinkStyle}>
+          📄 Download my resume (PDF)
+        </a>
+      </div>
+      <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+        I'm in Sydney (AEST). Happy to do an intro call any weekday.
+      </div>
+    </div>
   )
 }
 
-export default App
+function ResumeBlock() {
+  return (
+    <div style={{ display: 'grid', gap: 10 }}>
+      <div>
+        Here's the PDF — built from the same facts you'll see in the chat, just laid out for
+        ATS-friendly skimming.
+      </div>
+      <a
+        href="/resume.pdf"
+        target="_blank"
+        rel="noreferrer"
+        style={{
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 10,
+          padding: '12px 18px',
+          borderRadius: 999,
+          background: 'var(--dw-rose)',
+          color: '#fff',
+          textDecoration: 'none',
+          font: '600 13px/16px var(--font-sans)',
+          letterSpacing: '0.04em',
+          width: 'fit-content',
+          boxShadow: '0 6px 18px rgba(224,76,113,0.25)',
+        }}
+      >
+        📄 Download my resume (PDF)
+      </a>
+      <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+        Or stay in chat — paste a JD and I'll map the fit directly.
+      </div>
+    </div>
+  )
+}
+
+function JDExcerpt({ text }: { text: string }) {
+  const truncated = text.length > 280 ? text.slice(0, 280) + '…' : text
+  const lines = truncated.split('\n').slice(0, 6).join('\n')
+  return (
+    <div style={{ display: 'grid', gap: 8 }}>
+      <div
+        style={{
+          font: 'var(--font-mono-xs)',
+          letterSpacing: '0.06em',
+          textTransform: 'uppercase',
+          opacity: 0.7,
+        }}
+      >
+        📎 Job description · {text.length.toLocaleString()} chars
+      </div>
+      <div
+        style={{
+          font: 'var(--font-body-s)',
+          whiteSpace: 'pre-wrap',
+          opacity: 0.9,
+          maxHeight: 140,
+          overflow: 'hidden',
+          maskImage: 'linear-gradient(to bottom, black 70%, transparent)',
+          WebkitMaskImage: 'linear-gradient(to bottom, black 70%, transparent)',
+        }}
+      >
+        {lines}
+      </div>
+    </div>
+  )
+}
+
+export default function App() {
+  const [view, setView] = useState<'hero' | 'chat'>('hero')
+  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const [input, setInput] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [jdOpen, setJdOpen] = useState(false)
+
+  const abortRef = useRef<AbortController | null>(null)
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+
+  // Scroll-to-bottom on new messages / typing transitions
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
+  }, [messages, busy])
+
+  /* ---------------- Message helpers ---------------- */
+  const pushMessage = (msg: Omit<ChatMessage, 'id'>): string => {
+    const id = makeId('m')
+    setMessages((prev) => [...prev, { ...msg, id }])
+    return id
+  }
+  const pushTyping = (): string => {
+    const id = makeId('typing')
+    setMessages((prev) => [...prev, { id, side: 'nam', typing: true }])
+    return id
+  }
+  const replaceMessage = (id: string, msg: Omit<ChatMessage, 'id'>) => {
+    setMessages((prev) => prev.map((x) => (x.id === id ? { ...msg, id } : x)))
+  }
+
+  /* ---------------- Static answers ---------------- */
+  const respondWithCard = async (
+    content: ReactNode,
+    followups: readonly string[],
+    wide = false,
+  ) => {
+    setBusy(true)
+    const tid = pushTyping()
+    await sleep(600 + Math.random() * 350)
+    replaceMessage(tid, {
+      side: 'nam',
+      label: NAM_LABEL,
+      content,
+      followups,
+      wide,
+    })
+    setBusy(false)
+  }
+
+  const routeStaticAnswer = (id: QuickAction['id'] | 'default') => {
+    if (id === 'skills') {
+      void respondWithCard(
+        <div style={{ display: 'grid', gap: 12 }}>
+          <div>
+            Here's my stack — each chip shows the projects where I actually shipped it. Click any
+            project to filter.
+          </div>
+          <SkillsCard groups={SKILL_GROUPS} projects={PROJECTS} />
+        </div>,
+        FOLLOWUPS.skills,
+        true,
+      )
+    } else if (id === 'projects') {
+      void respondWithCard(
+        <div style={{ display: 'grid', gap: 18 }}>
+          <div style={{ font: 'var(--font-body-l)' }}>
+            Here's the full deck — pick any project to dig in. Most recent on the left.
+          </div>
+          <ProjectsShowcase projects={PROJECTS} />
+        </div>,
+        FOLLOWUPS.projects,
+        true,
+      )
+    } else if (id === 'pitch') {
+      void respondWithCard(<PitchCard pitch={PITCH} />, FOLLOWUPS.pitch)
+    } else if (id === 'contact') {
+      void respondWithCard(<ContactBlock />, FOLLOWUPS.contact)
+    } else if (id === 'resume') {
+      void respondWithCard(<ResumeBlock />, FOLLOWUPS.contact)
+    }
+  }
+
+  /* ---------------- JD analyzer flow ---------------- */
+  const submitJD = async (jdText: string) => {
+    setJdOpen(false)
+    const trimmed = jdText.trim()
+    if (!trimmed) return
+    if (view === 'hero') setView('chat')
+
+    pushMessage({ side: 'hr', label: HR_LABEL, content: <JDExcerpt text={trimmed} /> })
+
+    setBusy(true)
+    const tid = pushTyping()
+    await sleep(200)
+    replaceMessage(tid, {
+      side: 'nam',
+      content: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+            Reading the JD and mapping it to my background…
+          </span>
+        </div>
+      ),
+    })
+
+    try {
+      const res = await fetch('/api/jd-match', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ jd: trimmed }),
+      })
+      const data = (await res.json().catch(() => null)) as
+        | { result?: JDMatchResult; message?: string }
+        | null
+
+      if (!res.ok || !data?.result) {
+        replaceMessage(tid, {
+          side: 'nam',
+          label: NAM_LABEL,
+          content: (
+            <div>
+              {data?.message ??
+                "Hmm — I had trouble parsing that one cleanly. Want to try pasting it again?"}
+            </div>
+          ),
+          followups: FOLLOWUPS.default,
+        })
+        return
+      }
+
+      replaceMessage(tid, {
+        side: 'nam',
+        label: NAM_LABEL,
+        wide: true,
+        content: (
+          <div style={{ display: 'grid', gap: 12 }}>
+            <div style={{ font: 'var(--font-body-l)' }}>
+              Got it — I read through the JD. Here's where I see the fit:
+            </div>
+            <JDMatchCard result={data.result} projects={PROJECTS} />
+          </div>
+        ),
+        followups: FOLLOWUPS.jd,
+      })
+    } catch {
+      replaceMessage(tid, {
+        side: 'nam',
+        label: NAM_LABEL,
+        content: <div>Network error — try again in a sec?</div>,
+        followups: FOLLOWUPS.default,
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  /* ---------------- Free-text chat (streaming SSE) ---------------- */
+  const submitChat = async (text: string) => {
+    if (view === 'hero') setView('chat')
+    pushMessage({ side: 'hr', label: HR_LABEL, content: <span>{text}</span> })
+
+    setBusy(true)
+    const tid = pushTyping()
+
+    abortRef.current?.abort()
+    const ctrl = new AbortController()
+    abortRef.current = ctrl
+
+    let accumulated = ''
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ question: text }),
+        signal: ctrl.signal,
+      })
+
+      if (!res.ok || !res.body) {
+        const fb = (await res.json().catch(() => null)) as { message?: string } | null
+        replaceMessage(tid, {
+          side: 'nam',
+          label: NAM_LABEL,
+          content: <div>{fb?.message ?? 'Something went wrong. Try again?'}</div>,
+          followups: FOLLOWUPS.default,
+        })
+        return
+      }
+
+      const reader = res.body.getReader()
+      const decoder = new TextDecoder()
+      let buffer = ''
+
+      const renderStreamBubble = (final: boolean) => {
+        replaceMessage(tid, {
+          side: 'nam',
+          label: NAM_LABEL,
+          content: (
+            <div style={{ whiteSpace: 'pre-wrap' }}>
+              {accumulated}
+              {!final && (
+                <span
+                  style={{
+                    display: 'inline-block',
+                    width: 6,
+                    height: '0.95em',
+                    marginLeft: 2,
+                    background: 'var(--dw-rose)',
+                    verticalAlign: 'middle',
+                    animation: 'nam-caret 1s steps(2) infinite',
+                  }}
+                />
+              )}
+            </div>
+          ),
+          followups: final ? FOLLOWUPS.default : undefined,
+        })
+      }
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+        buffer += decoder.decode(value, { stream: true })
+        const lines = buffer.split('\n')
+        buffer = lines.pop() ?? ''
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue
+          let payload: {
+            type: string
+            value?: string
+            message?: string
+          }
+          try {
+            payload = JSON.parse(line.slice(6))
+          } catch {
+            continue
+          }
+          if (payload.type === 'text' && payload.value) {
+            accumulated += payload.value
+            renderStreamBubble(false)
+          } else if (payload.type === 'done') {
+            renderStreamBubble(true)
+          } else if (payload.type === 'error') {
+            replaceMessage(tid, {
+              side: 'nam',
+              label: NAM_LABEL,
+              content: <div>Error from the chat API: {payload.message}</div>,
+              followups: FOLLOWUPS.default,
+            })
+          }
+        }
+      }
+    } catch (err) {
+      if (err instanceof Error && err.name === 'AbortError') return
+      replaceMessage(tid, {
+        side: 'nam',
+        label: NAM_LABEL,
+        content: <div>Network error — try again?</div>,
+        followups: FOLLOWUPS.default,
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  /* ---------------- Quick action chips ---------------- */
+  const handleQuickAction = (action: QuickAction) => {
+    if (action.id === 'jd') {
+      setJdOpen(true)
+      return
+    }
+    if (view === 'hero') setView('chat')
+    pushMessage({ side: 'hr', label: HR_LABEL, content: <span>{action.label}</span> })
+    setTimeout(() => routeStaticAnswer(action.id), 60)
+  }
+
+  /* ---------------- Composer send (Hero + ChatView share this) ---------------- */
+  const onSend = (rawOverride?: string) => {
+    const text = (rawOverride ?? input).trim()
+    if (!text || busy) return
+    if (rawOverride === undefined) setInput('')
+
+    // 1. JD-shape detection → JD analyzer
+    if (looksLikeJD(text)) {
+      void submitJD(text)
+      return
+    }
+
+    // 2. Keyword shortcuts → static cards
+    const lower = text.toLowerCase()
+    if (/\b(skill|stack|tools|tooling)\b/.test(lower)) {
+      handleQuickAction({ id: 'skills', label: text })
+      return
+    }
+    if (/\b(project|projects|experience|work history|shipped|past role)\b/.test(lower)) {
+      handleQuickAction({ id: 'projects', label: text })
+      return
+    }
+    if (/\b(why hire|hire me|pitch|30 ?sec|sell yourself|tldr)\b/.test(lower)) {
+      handleQuickAction({ id: 'pitch', label: text })
+      return
+    }
+    if (/\b(contact|email|reach|phone|call|get in touch)\b/.test(lower)) {
+      handleQuickAction({ id: 'contact', label: text })
+      return
+    }
+    if (/\b(resume|cv|download)\b/.test(lower)) {
+      handleQuickAction({ id: 'resume', label: text })
+      return
+    }
+
+    // 3. Fallback → real LLM via /api/chat
+    void submitChat(text)
+  }
+
+  const onFollowupPick = (label: string) => {
+    const id = idForFollowup(label)
+    if (id === 'jd') {
+      setJdOpen(true)
+      return
+    }
+    if (id === 'default') {
+      handleQuickAction({ id: 'skills', label })
+      return
+    }
+    handleQuickAction({ id, label })
+  }
+
+  const resetConversation = () => {
+    abortRef.current?.abort()
+    setView('hero')
+    setMessages([])
+    setInput('')
+    setBusy(false)
+  }
+
+  /* ---------------- Render ---------------- */
+  return (
+    <div
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+        background: 'var(--bg-default)',
+        color: 'var(--fg-primary)',
+        fontFamily: 'var(--font-sans)',
+      }}
+    >
+      {view === 'hero' ? (
+        <Hero
+          onSubmit={(t) => onSend(t)}
+          onAction={handleQuickAction}
+          onPasteJD={() => setJdOpen(true)}
+        />
+      ) : (
+        <ChatView
+          messages={messages}
+          input={input}
+          setInput={setInput}
+          onSend={() => onSend()}
+          onPasteJD={() => setJdOpen(true)}
+          onResetHome={resetConversation}
+          onFollowupPick={onFollowupPick}
+          busy={busy}
+          scrollRef={scrollRef}
+        />
+      )}
+
+      {jdOpen && <JDModal onClose={() => setJdOpen(false)} onSubmit={submitJD} />}
+    </div>
+  )
+}
