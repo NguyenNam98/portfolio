@@ -29,6 +29,6 @@ preview_id = "8d69d5be1b774a29bb141d15d5702d67"
 # Public, non-secret config. Tweak without redeploying secrets.
 [vars]
 CHAT_MODEL = "claude-haiku-4-5-20251001"
-CHAT_DAILY_LIMIT_PER_IP = "10"
+CHAT_DAILY_LIMIT_PER_IP = "30"
 CHAT_MAX_OUTPUT_TOKENS = "500"
 CHAT_MAX_INPUT_CHARS = "500"
