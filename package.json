@@ -8,8 +8,10 @@
     "build": "pnpm typecheck && vite build",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.worker.json --noEmit",
-    "deploy": "pnpm build && wrangler pages deploy dist",
-    "dev:pages": "pnpm build && wrangler pages dev dist"
+    "deploy:prod": "pnpm build && wrangler pages deploy dist --branch=main",
+    "deploy:preview": "pnpm build && wrangler pages deploy dist --branch=preview",
+    "dev:pages": "pnpm build && wrangler pages dev dist",
+    "tail": "wrangler pages deployment tail --project-name personal-website"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",

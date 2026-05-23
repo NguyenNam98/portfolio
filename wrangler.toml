@@ -1,3 +1,21 @@
+# Cloudflare Pages config for nam.rosentech.online.
+#
+# Pattern matches the existing startiny-landing project under the same
+# account (michalnam98@gmail.com, account ce79396cdd85987649b5f481ac331ebb):
+#   - Pages project deployed manually via `wrangler pages deploy dist`
+#   - Custom subdomain wired in the Cloudflare dashboard, not via toml
+#   - Pages Functions under /functions handle the API surface
+#
+# Deploy:
+#   pnpm deploy:prod        # production deploy (--branch=main)
+#   pnpm deploy:preview     # preview deploy (--branch=preview)
+#
+# Secrets (set once via `wrangler pages secret put <NAME>`):
+#   ANTHROPIC_API_KEY     - day 6-9 (chat endpoint)
+#   SUPABASE_URL          - day 6-9
+#   SUPABASE_ANON_KEY     - day 6-9
+#   TURNSTILE_SECRET_KEY  - day 11 (abuse protection)
+
 name = "personal-website"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-05-23"
