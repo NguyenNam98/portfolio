@@ -46,43 +46,137 @@
   },
   "mastt": {
     "result": {
-      "match": 72,
-      "headline": "Strong backend + infra fit; web stack and AI-assisted shipping are less core to my work.",
+      "match": 75,
+      "headline": "Strong fundamentals + AI-assisted shipping; ramp needed on Go, Azure, NextJS stack.",
       "reasons": [
         {
-          "point": "5+ years production cloud engineering",
-          "detail": "Built and operated AWS platforms at scale (EKS, RDS, Postgres, Redis, Secrets Manager) — your construction domain needs reliable ops and deployment discipline."
+          "point": "AI-assisted development (Claude Code)",
+          "detail": "Shipped Startiny to App Store in 2 weeks using Claude Code for most implementation, including scope/product decisions—directly matches their LLM coding tools requirement."
         },
         {
-          "point": "LLM-assisted shipping proven end-to-end",
-          "detail": "Shipped Startiny (iOS App Store) in 2 weeks using Claude Code for implementation while I handled scope, product decisions, and correctness — exactly the AI-coding-tools experience you're asking for."
+          "point": "TypeScript + modern backend frameworks",
+          "detail": "5+ years shipping NestJS / TypeScript services at Sample Assist and GGJungle; strong fundamentals transfer to their NextJS stack."
         },
         {
-          "point": "Product mindset + backend ownership",
-          "detail": "Designed and shipped the Coupon module and VNPAY integration at GGJungle — I think about market fit and user value, not just code."
+          "point": "Full-stack product thinking",
+          "detail": "Startiny required directing AI, making scope cuts, and iterating through App Store review—exactly the 'product builder' mindset they're asking for."
         },
         {
-          "point": "TypeScript / NestJS across 20+ services",
-          "detail": "You use TypeScript; I've built production backends in it (NestJS) with clean architecture, shared modules, and consistent standards across a multi-service platform."
+          "point": "Database design & integration",
+          "detail": "Led Firestore → RDS Postgres replatform (100+ tables) and built the Coupon module with thoughtful schema; MongoDB is adjacent."
+        },
+        {
+          "point": "Core CS fundamentals + learning velocity",
+          "detail": "Master's in CS + 5 years production work + shipped solo with AI means I can ramp quickly on Go and Azure."
         }
       ],
       "relevantSkills": [
         "TypeScript",
         "NestJS / TypeScript",
-        "MongoDB",
-        "GitHub Actions",
-        "AWS (general platform knowledge)",
+        "Node.js",
         "AI-assisted development (Claude Code)",
-        "Postgres / SQL"
+        "AWS (transferable to Azure)",
+        "MongoDB"
       ],
       "relevantProjects": [
         "startiny",
         "sample-assist",
         "ggjungle"
       ],
-      "gaps": "NextJS and GoLang aren't in my core experience — I'm backend + platform focused, not frontend-first. Azure is new to me (I've shipped on AWS). The role emphasizes product + design hat; I'm confident in product thinking but less experienced leading design decisions.",
-      "closer": "Happy to chat about how AI-assisted shipping translates to your stack and whether my backend rigor fits your architecture."
+      "gaps": "Go, NextJS, and Azure are not in my production shipping stack—I'd be ramping on the backend language and primary cloud platform.",
+      "closer": "Happy to chat about how the AI-assisted shipping and product-builder mindset translate, and how quickly I'd ramp on Go and Azure."
     },
-    "computedAt": "2026-05-24T09:13:04.723Z"
+    "computedAt": "2026-05-24T11:34:02.649Z"
+  },
+  "ofload": {
+    "result": {
+      "match": 88,
+      "headline": "Strong full-stack + DevOps fit; NestJS/TypeScript/React/AWS all direct experience.",
+      "reasons": [
+        {
+          "point": "NestJS / TypeScript / Node.js production at scale",
+          "detail": "Built 20+ NestJS services at Sample Assist with TypeORM, shared modules, and production Postgres — exact stack match for your backend services."
+        },
+        {
+          "point": "React + TypeScript frontend experience",
+          "detail": "Built and shipped React Native (Expo) for Startiny and contributed frontend work at Sample Assist; comfortable with React and TypeScript."
+        },
+        {
+          "point": "AWS + Kubernetes infrastructure ownership",
+          "detail": "Designed and provisioned production AWS (EKS, RDS Postgres, Redis, S3, ALB) in Terraform; can own both backend services and infrastructure."
+        },
+        {
+          "point": "AI-assisted development shipped to production",
+          "detail": "Shipped Startiny to iOS App Store in two weeks using Claude Code; comfortable with AI-assisted workflows, code review, and shipping quality alongside LLM tooling."
+        },
+        {
+          "point": "Product-minded engineering in SaaS environments",
+          "detail": "Owned feature modules end-to-end at GGJungle (Coupon, VNPAY) and Sample Assist; comfortable with cross-functional squads, product impact, and business outcomes."
+        }
+      ],
+      "relevantSkills": [
+        "NestJS / TypeScript",
+        "Node.js",
+        "React",
+        "PHP (production features)",
+        "AWS EKS / EC2 / RDS / S3",
+        "Postgres / SQL",
+        "Redis",
+        "AI-assisted development (Claude Code)"
+      ],
+      "relevantProjects": [
+        "sample-assist",
+        "ggjungle",
+        "startiny"
+      ],
+      "gaps": "PHP/Laravel isn't my primary stack (I shipped NestJS over Node, not Laravel) — I've done production PHP feature work at GGJungle but haven't architected a Laravel codebase; ramp would be straightforward given TypeScript/NestJS fundamentals.",
+      "closer": "This hits most of my core stack directly. Happy to chat about the NestJS/TypeScript alignment and how AI-assisted shipping could fit your product velocity."
+    },
+    "computedAt": "2026-05-24T11:34:31.948Z"
+  },
+  "launch": {
+    "result": {
+      "match": 72,
+      "headline": "Strong fundamentals, but frontend React/Next isn't my primary production stack.",
+      "reasons": [
+        {
+          "point": "Full-stack Node.js + TypeScript across 20+ services",
+          "detail": "Built NestJS backend at Sample Assist, but frontend React/Next experience is limited to the Startiny side project, not production work at scale."
+        },
+        {
+          "point": "CI/CD and DevOps depth",
+          "detail": "GitHub Actions, Argo CD, GitOps, Helm — exactly what a modern fintech stack needs, and I've shipped this in production."
+        },
+        {
+          "point": "Microservices and API design",
+          "detail": "Designed and built 20+ NestJS services with shared modules for auth and data access; comfortable with service boundaries and BFF patterns."
+        },
+        {
+          "point": "Can drive technical direction",
+          "detail": "Mentored 3 engineers on NestJS/Terraform/Helm standards at Sample Assist; led Firebase → AWS replatform decision-making with one other engineer."
+        },
+        {
+          "point": "Growth mindset + communication",
+          "detail": "Japanese client work at GGJungle required rigorous specs and documentation; solo shipped Startiny end-to-end; comfortable translating between engineering and stakeholders."
+        }
+      ],
+      "relevantSkills": [
+        "NestJS / TypeScript",
+        "Node.js",
+        "GitHub Actions",
+        "Microservices",
+        "CI / CD",
+        "AWS",
+        "Helm"
+      ],
+      "relevantProjects": [
+        "sample-assist",
+        "ggjungle",
+        "startiny"
+      ],
+      "gaps": "React and Next.js are not my primary production stack — Startiny is React Native on mobile, not web React, and my backend focus at Sample Assist/GGJungle means frontend isn't where I've driven most decisions. I'd be ramping on the modern web frontend ecosystem alongside the role.",
+      "closer": "Open to chat about the backend + DevOps layer and how I'd approach levelling up the frontend piece — happy to jump on a call."
+    },
+    "computedAt": "2026-05-24T11:32:31.922Z"
   }
 }

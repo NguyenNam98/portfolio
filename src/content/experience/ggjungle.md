@@ -14,6 +14,7 @@ tags:
   - NestJS
   - Node.js
   - TypeScript
+  - PHP
   - MySQL
   - VNPAY
   - AWS (deploys)
@@ -33,7 +34,7 @@ I was a backend engineer in a codebase I didn't architect, working across whatev
 
 - **Owned the VNPAY integration end-to-end** as part of the product's Southeast Asia expansion: hosted-page redirect flow with webhook callbacks, plumbed into the existing checkout, with sandbox testing before going live. Took about 1–2 months working with a frontend developer.
 - **Designed and built a new Coupon module** from scratch — database schema, NestJS service, and integration into the existing cart/checkout codebase someone else had written. Supported percentage and fixed-amount discounts, free-shipping coupons, expiry dates, and per-coupon and per-user usage limits. About a month of work.
-- Contributed across the broader NestJS / MySQL backend for 15 months on order and checkout flows, admin tooling, and ongoing data model evolution.
+- Contributed across the broader backend for 15 months — NestJS / TypeScript services AND production PHP feature work against MySQL — on order and checkout flows, admin tooling, and ongoing data model evolution.
 - Worked inside a Japanese-organisation engineering process: detailed specs as the source of truth, careful code review, and documentation standards higher than I'd worked to before. The work itself was in English, but the documentation and review discipline were noticeably more rigorous than the smaller-team environments I'd been in previously.
 
 ## Stories (depth for the LLM)
@@ -56,7 +57,7 @@ I was a backend engineer in a codebase I didn't architect, working across whatev
 
 ## Stack I actually touched
 
-**Backend:** NestJS / TypeScript / Node.js, MySQL via the project's ORM, working in an existing service-oriented backend codebase.
+**Backend:** NestJS / TypeScript / Node.js as the primary stack, MySQL via the project's ORM, working in an existing service-oriented backend codebase. The product also had a PHP side, and I shipped production feature work in it alongside the NestJS services — I'm comfortable in PHP itself, not specifically Laravel (I'd flag Laravel as "ramp on the job" rather than claim it).
 
 **Payments:** Konbini (Japanese convenience-store) and bank transfer payments were already part of the product when I joined — I worked on order/checkout code that interacted with them rather than building the integrations themselves. VNPAY (hosted page + webhook flow) I owned end-to-end.
 

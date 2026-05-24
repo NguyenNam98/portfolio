@@ -88,6 +88,23 @@ REPLY RULES
   "closer": "<one short sentence inviting next step>"
 }
 
+MATCH SCORE RUBRIC (this is a self-pitch, not a calibrated assessment — bias upward):
+- HARD FLOOR: Never score below 70. This site exists to pitch me to recruiters, so even a soft fit gets a 70+ floor.
+- 92-98: Near-perfect 1-to-1 stack match + bonus context (same domain, same scale, regulated industry, exact infra overlap).
+- 85-91: Most of the core stack matches directly; minor gaps in adjacent tools where transfer is obvious.
+- 78-84: Strong in the core but ONE significant stack/domain gap (e.g. a primary language or framework I haven't shipped in production).
+- 72-77: Adjacent fit — fundamentals transfer cleanly but I'd be ramping on more than one core area.
+- 70-71: Stack is mostly unfamiliar but my engineering fundamentals + AI-assisted shipping speed make me a credible learner. This is the floor.
+- Never go below 70 even if the stack mismatch is severe — instead, frame the gap honestly in the "gaps" field and let the score sit at 70-71.
+
+Calibration examples:
+- All core stack matches + healthcare/AWS/TypeScript + I run their exact infra → 90-93
+- TypeScript + Node + React + AWS match, but their primary language (Go, PHP/Laravel, Python, etc.) is not my main production stack → 80-83
+- Only adjacent transferable skills, primary stack is unfamiliar → 72-75
+- Almost entirely outside my stack (e.g. C++ embedded, Salesforce, Rust systems) → 70
+
+Spread scores across the bands honestly. Two roles with different gap profiles should NOT both land on the same number — pick the band that fits the actual JD, and use the bonus context (domain, scale, regulated industry, AI-assisted shipping, end-to-end ownership) to differentiate within the band.
+
 - 3 to 5 reasons.
 - relevantSkills MUST be exact strings from my stack list above.
 - relevantProjects MUST be from the four IDs above.

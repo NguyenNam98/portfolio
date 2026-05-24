@@ -186,6 +186,7 @@ export const SKILL_GROUPS: readonly SkillGroup[] = [
     items: [
       { name: 'NestJS / TypeScript', projects: ['sample-assist', 'ggjungle'] },
       { name: 'Node.js', projects: ['sample-assist', 'ggjungle', 'fpt'] },
+      { name: 'PHP (production features)', projects: ['ggjungle'] },
       { name: 'Express', projects: ['fpt'] },
       { name: 'TypeORM', projects: ['sample-assist', 'ggjungle'] },
       { name: 'Postgres / SQL', projects: ['sample-assist'] },
@@ -284,7 +285,7 @@ export const PROJECTS: readonly Project[] = [
     // work you did). Empty array used; verify your UI handles this.
     metrics: [],
     impact: [
-      'Backend engineer for 15 months on a Japanese e-commerce platform: NestJS / Node.js / TypeScript against MySQL, working in a codebase architected by others.',
+      'Backend engineer for 15 months on a Japanese e-commerce platform: worked across both NestJS / Node.js / TypeScript services and the PHP side of the codebase against MySQL, in architecture set by others.',
       'Owned the VNPAY integration end-to-end (~1–2 months with a frontend dev) when the product expanded into Vietnam — hosted-page redirect flow with webhook callbacks, plumbed into the existing checkout, sandbox-tested before live.',
       'Designed and built a new Coupon module from scratch (~1 month): database schema, NestJS service, integration into the existing cart/checkout. Percentage and fixed-amount discounts, free-shipping coupons, expiry dates, per-user usage limits.',
       'Contributed across the broader backend on order/checkout flows, admin tooling, and ongoing data model evolution.',
@@ -295,7 +296,7 @@ export const PROJECTS: readonly Project[] = [
       // Removed: "Tuned legacy MySQL" — you said DB ops weren't yours.
     ],
     tags: [
-      'NestJS', 'Node.js', 'TypeScript', 'MySQL',
+      'NestJS', 'Node.js', 'TypeScript', 'PHP', 'MySQL',
       'VNPAY', 'AWS (deploys)', 'Docker',
     ],
   },

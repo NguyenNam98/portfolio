@@ -134,6 +134,108 @@ Stack: TypeScript, NextJS, GoLang, MongoDB, Azure.`,
       },
     ],
   },
+  ofload: {
+    slug: 'ofload',
+    displayName: 'Ofload',
+    role: 'Software Engineer',
+    notes: `Ofload is Australia's leading digital freight partner — a Sydney-headquartered FreightTech scaleup tackling the AUD $66B Australian road freight market. The core problem they're solving is concrete: trucks in Australia drive empty 30% of the time, networks are fragmented, smaller transport operators can't compete with big incumbents, and supply chains lack visibility. Ofload's platform connects blue-chip enterprise customers (Asahi, Kimberly-Clark, Metcash, Noumi) with a growing network of small-to-medium transport operators — turning otherwise empty truck kilometres into smarter, greener freight.
+
+They've raised over USD $100M from top-tier investors who also back Canva, Revolut, and HelloFresh. Recognition: #1 Deloitte Climate and Sustainability Award 2024 for their Carbon Analytics Platform, #2 AFR BOSS Best Places to Work 2024 (Transport and Construction), AFR BOSS Fast100 List 2025 with second-highest revenue, Deloitte Fast50 three consecutive years, AFR FastStarters three consecutive years.
+
+The product surface area named in the JD: AI-powered data ingestion, pricing and rate-card algorithms, bulk upload workflows, and systems that directly influence margin, cashflow, and operational efficiency.
+
+Stack: PHP 8 / Laravel for the legacy / monolith side, Node.js / NestJS / TypeScript / React for newer services, Postgres + Redis + S3 + Kubernetes + AWS for infra. Python is "highly regarded" for AI/data work. NestJS/TypeScript and React/TypeScript overlap exactly with my Sample Assist + personal-site stack. I also shipped production PHP features at GGJungle for 15 months against MySQL — not Laravel specifically, but PHP itself isn't a cold-start, which shortens the Laravel ramp.
+
+Engineering culture: small cross-functional squads with PMs and Designers, AI-assisted development explicitly part of the workflow (Claude Code, Cursor named), autonomy + ownership trusted to engineers. Hybrid Sydney role; I'm Sydney-based, 2 weeks notice.`,
+    jdText: `Software Engineer at Ofload — Sydney hybrid, FreightTech scaleup ($100M+ funding, #1 Deloitte Climate Award 2024). Ofload connects blue-chip customers (Asahi, Kimberly-Clark, Metcash, Noumi) with SMB transport operators to reduce empty truck miles in Australia's $66B freight market.
+
+Role: Build core platform features in a small cross-functional squad with PMs and Designers. Develop scalable backend services using PHP/Laravel, Node.js/NestJS. Contribute to frontend in React/TypeScript. Solve complex data ingest and bulk upload challenges including AI-assisted workflows and pricing/rate-card logic. Build systems with meaningful business impact across finance, operations, margin, cashflow. Code reviews, planning, debugging production, growing toward feature ownership.
+
+Stack: PHP 8, Laravel, Node.js, NestJS, TypeScript, React, Postgres, Redis, S3, Kubernetes, AWS. Python / AI models / data engineering highly regarded.
+
+What they want: 2-5 years building production systems. Experience with their core stack OR adjacent languages with willingness to learn. Experience using AI-assisted dev tools (Claude Code, Cursor) or eagerness to adopt them. APIs, relational databases, modern dev workflows. Strong problem-solving. Growth mindset. SaaS / product-led background highly regarded. Product engineering mindset — they explicitly say mindset, adaptability, and potential matter most.`,
+    whyFit: [
+      {
+        point: 'Full stack overlap — NestJS, TypeScript, React, and production PHP',
+        detail:
+          "I run a NestJS + TypeScript backend across 20+ services at Sample Assist, this site is React 19 + TS on Cloudflare Pages, and I shipped production PHP features at GGJungle for 15 months against MySQL. Laravel itself I'd pick up on the job, but PHP isn't a cold-start — I've owned features in it.",
+      },
+      {
+        point: 'Postgres + Redis + S3 + Kubernetes + AWS — every line of your infra list',
+        detail:
+          'At Sample Assist I built the production AWS platform from zero in Terraform: EKS (20+ services on Helm + Argo CD GitOps), RDS Postgres (100+ tables I migrated off Firebase with dual-write + shadow reads, no incident), ElastiCache Redis, S3, VPC, IAM least-privilege.',
+      },
+      {
+        point: 'AI-assisted development in real workflows, not slideware',
+        detail:
+          "I lead the AI rollout for a 5-engineer team at Sample Assist (Cursor, Claude Code, Copilot) and shipped an Anthropic-powered iOS app solo in two weeks. This site's JD analyzer is Claude Haiku 4.5 with prompt caching — the AI-enabled engineering posture Ofload is hiring for, applied to a real product.",
+      },
+      {
+        point: 'Product builder, not just a code monkey',
+        detail:
+          'Startiny is an iOS app I took from idea to App Store in 2 weeks solo — scope cuts, UX calls, App Store review iteration, distribution. At Sample Assist I drove the Firebase → AWS replatform pre-launch because the company needed it, not because someone handed me a ticket.',
+      },
+      {
+        point: 'Regulated SaaS background — careful with data, margin, and cashflow systems',
+        detail:
+          "Sample Assist handles My Health Records Act–regulated data; we passed an external pen test, run IAM least-privilege in Terraform, and I've shipped zero-downtime migrations under live load. Transfers cleanly to Ofload's pricing / rate-card / cashflow surface where wrong answers cost money directly.",
+      },
+      {
+        point: 'Sydney-based, hybrid-ready, no relocation lag',
+        detail:
+          "I'm in Sydney already — happy with hybrid in the Ofload office, and 2 weeks notice from my current role.",
+      },
+    ],
+  },
+  launch: {
+    slug: 'launch',
+    displayName: 'Launch',
+    role: 'Software Engineer (Full Stack contract)',
+    notes: `Launch (The Launch Group) is an Australian award-winning recruitment and talent-solutions group operating across Australia, New Zealand, Japan, and Singapore. Three businesses sit under the group: Launch Recruitment (the agency — permanent, contracting, payroll, executive search), Launch Talent Solutions (MSP, RPO, total talent management, vendor management systems), and LTS Consulting (technology transformation, project services, workforce management). Specialist divisions include Software/Application Development, Digital, Cybersecurity, Data & Analytics, Emerging Technology — so the recruiter screening me is likely from the Software Development or Digital division.
+
+The role they're sourcing me for is a Full Stack Software Engineer contract at a leading global financial organisation (100+ years in market, real-tech engineering focus). 6-month initial contract with view to extend/perm, ASAP start, max 2-week notice ideal, hybrid 3 days/week. Stack: React, Next.js, Node — frontend lean, with backend API / microservices / BFF and CI-CD / DevOps required.
+
+Framing: Launch is the agency, not the hiring client. The recruiter's job is to decide whether to put me forward to the financial-org client. So what matters is "am I a clean, low-risk placement they can confidently forward?" — stack match, fast availability, hybrid-ready, communication, CI-CD/DevOps maturity, and a track record of driving technical direction.`,
+    jdText: `Software Engineer (Full Stack contract) sourced by Launch Recruitment for a leading global financial organisation (100+ years in market). 6-month initial contract with view to extend/perm. ASAP start, max 2 weeks notice. Hybrid Sydney, 3 days/week in office.
+
+Role: Build on and uplift the current technology roadmap. Work in a team and autonomously to write code, develop and deliver new technologies. Strive for excellence and continuous improvement. Propose solutions and direction. Maintain and improve the user experience across all frontend.
+
+Stack: React, Next.js, Node — Full Stack with frontend lean.
+
+What they want: Strong Full Stack (4+ years) with frontend focus in React, Next, Node. Good backend API / microservices / BFF experience. Good CI/CD and DevOps experience. Ability to propose solutions and drive technical direction. Growth mindset. Excellent communication skills and stakeholder communication.`,
+    whyFit: [
+      {
+        point: 'React, Node, and TypeScript already in production at Full Stack level',
+        detail:
+          "I run a NestJS + TypeScript backend across 20+ services at Sample Assist and the React 19 + TS frontend you're chatting with now — that's the Full Stack JS scope. Next.js specifically isn't in my production work yet (Sample Assist and this site are Vite + React), but React/Node fundamentals transfer cleanly and I'd be productive on Next inside a week.",
+      },
+      {
+        point: 'Backend API + microservices breadth, not just CRUD',
+        detail:
+          'At Sample Assist I built and operate 20+ NestJS microservices behind a custom in-house auth service that does cross-product SSO across 7 apps. The BFF / API-gateway shape Launch describes is the same architecture I work in daily.',
+      },
+      {
+        point: 'CI/CD and DevOps maturity a regulated financial client will care about',
+        detail:
+          'GitHub Actions for CI, Argo CD + Helm for GitOps deploys across staging and prod, Terraform for the whole AWS footprint (EKS, RDS Postgres, ElastiCache, IAM least-privilege), Prometheus + Grafana for observability, passed an external pen test. The discipline a 100-year-old financial org expects from a contractor on day one.',
+      },
+      {
+        point: 'Proven at proposing solutions and driving technical direction',
+        detail:
+          "I led the Firebase → AWS replatform at Sample Assist with one other engineer over 3 months pre-launch — that wasn't a handed-down ticket, it was a call I made because the company needed it. Same posture transfers to the JD's 'propose solutions and drive technical direction' line.",
+      },
+      {
+        point: 'Clean placement: Sydney-based, 2-week notice, hybrid-ready, fast start',
+        detail:
+          "I'm in Sydney already, on a standard 2-week notice from Sample Assist, and happy with 3 days/week in office. ASAP start is realistic — Launch can put me forward without availability friction.",
+      },
+      {
+        point: 'Communication track record across stakeholders and engineering teams',
+        detail:
+          'Mentored 3 engineers at Sample Assist (set NestJS/Terraform/Helm standards, ran code review, onboarded them to on-call), and worked through detailed cross-cultural spec-and-review processes at GGJungle. Stakeholder-facing communication is a habit, not a hurdle.',
+      },
+    ],
+  },
   // </new-company:entries>
 }
 

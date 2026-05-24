@@ -4,6 +4,7 @@ import { PITCH, PROFILE, PROJECTS, SKILL_GROUPS, type Pitch } from '@/data/profi
 import { FOLLOWUPS, looksLikeJD, type JDMatchResult, type QuickAction } from '@/data/prompts'
 import { getCompanyBySlug, type Company } from '@/data/companies'
 import { CompanyProvider } from '@/lib/company-context'
+import { track, registerCompany } from '@/lib/analytics'
 import ChatView, { type ChatMessage } from '@/components/chat/ChatView'
 import Hero from '@/components/hero/Hero'
 import JDModal from '@/components/JDModal'
@@ -214,6 +215,11 @@ export default function App() {
     if (el) el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' })
   }, [messages, busy])
 
+  // Tag every event in this session with the company we're pitching to
+  useEffect(() => {
+    if (company) registerCompany(company.slug, company.displayName)
+  }, [company])
+
   /* ---------------- Message helpers ---------------- */
   const pushMessage = (msg: Omit<ChatMessage, 'id'>): string => {
     const id = makeId('m')
@@ -316,6 +322,7 @@ export default function App() {
     if (!trimmed) return
     if (view === 'hero') setView('chat')
 
+    track('jd_match_run', { has_company: !!company, jd_length: trimmed.length })
     pushMessage({ side: 'hr', label: HR_LABEL, content: <JDExcerpt text={trimmed} /> })
 
     setBusy(true)
@@ -388,6 +395,7 @@ export default function App() {
     if (!company) return
     if (view === 'hero') setView('chat')
 
+    track('pitch_generated', { company_slug: company.slug })
     setBusy(true)
     const tid = pushTyping()
     await sleep(200)
@@ -396,7 +404,7 @@ export default function App() {
       content: (
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
           <span style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
-            Drafting a 30-second pitch tailored for {company.displayName}…
+            Let me think about what matters most for {company.displayName}…
           </span>
         </div>
       ),
@@ -420,7 +428,7 @@ export default function App() {
             <div style={{ display: 'grid', gap: 10 }}>
               <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
                 {data?.message ??
-                  "Couldn't draft a fresh pitch this time — here's my default one."}
+                  "Couldn't quite gather my thoughts for that one — here's my usual pitch."}
               </div>
               <PitchCard pitch={PITCH} />
             </div>
@@ -443,7 +451,7 @@ export default function App() {
         content: (
           <div style={{ display: 'grid', gap: 10 }}>
             <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
-              Network hiccup — here's my default 30-second pitch instead.
+              Lost the thread for a sec — here's my usual pitch instead.
             </div>
             <PitchCard pitch={PITCH} />
           </div>
@@ -458,6 +466,7 @@ export default function App() {
   /* ---------------- Free-text chat (streaming SSE) ---------------- */
   const submitChat = async (text: string) => {
     if (view === 'hero') setView('chat')
+    track('chat_sent', { has_company: !!company, length: text.length })
     pushMessage({ side: 'hr', label: HR_LABEL, content: <span>{text}</span> })
 
     setBusy(true)
@@ -566,6 +575,7 @@ export default function App() {
 
   /* ---------------- Quick action chips ---------------- */
   const handleQuickAction = (action: QuickAction) => {
+    track('chip_clicked', { id: action.id, has_company: !!company })
     if (action.id === 'jd') {
       setJdOpen(true)
       return

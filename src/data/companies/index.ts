@@ -7,6 +7,8 @@ import { acme } from './acme'
 import { testCo } from './test-co'
 import { magentus } from './magentus'
 import { mastt } from './mastt'
+import { ofload } from './ofload'
+import { launch } from './launch'
 // </new-company:imports>
 
 interface PrecomputedEntry {
@@ -32,6 +34,8 @@ const COMPANIES = {
   'test-co': enrich(testCo),
   magentus: enrich(magentus),
   mastt: enrich(mastt),
+  ofload: enrich(ofload),
+  launch: enrich(launch),
   // </new-company:entries>
 } as const satisfies Record<string, Company>
 
