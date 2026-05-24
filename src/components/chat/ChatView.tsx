@@ -1,11 +1,12 @@
 import { useEffect, useRef, type Ref } from 'react'
 
+import { useCompany } from '@/lib/company-context'
 import Bubble, { type BubbleSide } from '../Bubble'
 import ChipRow from '../ChipRow'
 import TypingDots from '../TypingDots'
-import AsteriskBg from '../hero/AsteriskBg'
 import ChatMobileBar from './ChatMobileBar'
 import ChatSidebar from './ChatSidebar'
+import ChatTopBar from './ChatTopBar'
 
 export interface ChatMessage {
   readonly id: string
@@ -41,9 +42,19 @@ export default function ChatView({
   scrollRef,
 }: Props) {
   const taRef = useRef<HTMLTextAreaElement | null>(null)
+  const company = useCompany()
+
   useEffect(() => {
     taRef.current?.focus()
   }, [])
+
+  const starterChips: readonly string[] = company
+    ? [
+        `See why I fit at ${company.displayName}`,
+        'Show top projects',
+        'Why hire me in 30s',
+      ]
+    : ['Show top projects', 'Show technical skills', 'Why hire me in 30s']
 
   return (
     <div
@@ -64,18 +75,10 @@ export default function ChatView({
           minWidth: 0,
           position: 'relative',
           background: 'var(--bg-default)',
-          overflow: 'hidden',
         }}
       >
-        {/* Asterisk + grid backdrop (dimmed) */}
-        <div
-          aria-hidden
-          style={{ position: 'absolute', inset: 0, opacity: 0.55, pointerEvents: 'none' }}
-        >
-          <AsteriskBg accent="rose" />
-        </div>
-
         <ChatMobileBar onResetHome={onResetHome} onPasteJD={onPasteJD} />
+        <ChatTopBar />
 
         {/* Messages */}
         <div
@@ -83,18 +86,18 @@ export default function ChatView({
           style={{
             flex: 1,
             overflow: 'auto',
-            padding: 'var(--space-8) var(--space-6) var(--space-5)',
+            padding: '32px 48px 220px',
             position: 'relative',
             zIndex: 1,
           }}
         >
           <div
             style={{
-              maxWidth: 820,
+              maxWidth: 980,
               margin: '0 auto',
               display: 'flex',
               flexDirection: 'column',
-              gap: 'var(--space-6)',
+              gap: 28,
             }}
           >
             {messages.map((m) => (
@@ -130,94 +133,154 @@ export default function ChatView({
           </div>
         </div>
 
-        {/* Composer */}
+        {/* Composer — sticky bottom, rose-outlined */}
         <div
           style={{
-            position: 'relative',
-            zIndex: 1,
-            padding: 'var(--space-5) var(--space-6) var(--space-6)',
-            borderTop: '1px solid var(--border-subtle)',
-            background: 'var(--bg-default)',
+            position: 'sticky',
+            bottom: 0,
+            padding: '18px 48px 24px',
+            background:
+              'linear-gradient(to top, var(--bg-default) 35%, rgba(255,255,255,0))',
+            pointerEvents: 'none',
+            zIndex: 4,
             flexShrink: 0,
           }}
         >
           <div
             style={{
-              maxWidth: 820,
+              maxWidth: 884,
               margin: '0 auto',
+              pointerEvents: 'auto',
               display: 'flex',
-              flexDirection: 'column',
+              alignItems: 'center',
               gap: 12,
+              padding: '14px 16px 14px 22px',
+              background: 'var(--bg-default)',
+              border: '1.5px solid var(--dw-rose)',
+              borderRadius: 'var(--radius-xl)',
+              boxShadow: '0 12px 32px rgba(224,76,113,0.10)',
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'flex-end',
-                gap: 12,
-                padding: '14px 16px',
-                background: 'var(--bg-default)',
-                border: '1.5px solid var(--border-default)',
-                borderRadius: 20,
-                boxShadow: 'var(--elev-2)',
-                transition: 'border-color var(--motion-med) var(--ease-standard)',
+            <textarea
+              ref={taRef}
+              rows={1}
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault()
+                  onSend()
+                }
               }}
-              onFocusCapture={(e) => (e.currentTarget.style.borderColor = 'var(--dw-rose)')}
-              onBlurCapture={(e) => (e.currentTarget.style.borderColor = 'var(--border-default)')}
+              placeholder={
+                company
+                  ? `Hi ${company.displayName} team — ask me anything…`
+                  : 'Ask me anything, or paste a job description…'
+              }
+              disabled={busy}
+              style={{
+                flex: 1,
+                border: 'none',
+                outline: 'none',
+                resize: 'none',
+                background: 'transparent',
+                font: 'var(--font-body-l)',
+                color: 'var(--fg-primary)',
+                padding: '2px 0',
+                maxHeight: 140,
+              }}
+            />
+            <button
+              onClick={onSend}
+              disabled={!input.trim() || busy}
+              aria-label="Send"
+              style={{
+                width: 36,
+                height: 36,
+                borderRadius: 999,
+                background: input.trim() && !busy ? 'var(--dw-rose)' : 'var(--dw-gray-10)',
+                color: input.trim() && !busy ? '#fff' : 'var(--fg-secondary)',
+                border: 'none',
+                cursor: input.trim() ? 'pointer' : 'default',
+                display: 'grid',
+                placeItems: 'center',
+                transition: 'all var(--motion-fast) var(--ease-standard)',
+                flexShrink: 0,
+              }}
             >
-              <textarea
-                ref={taRef}
-                rows={1}
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    onSend()
-                  }
-                }}
-                placeholder="Ask me anything, or paste a job description…"
-                disabled={busy}
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  outline: 'none',
-                  resize: 'none',
-                  background: 'transparent',
-                  font: '400 17px/26px var(--font-sans)',
-                  color: 'var(--fg-primary)',
-                  padding: '4px 2px',
-                  maxHeight: 140,
-                }}
-              />
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <line x1="12" y1="19" x2="12" y2="5" />
+                <polyline points="5 12 12 5 19 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div
+            style={{
+              maxWidth: 884,
+              margin: '12px auto 0',
+              pointerEvents: 'auto',
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              gap: 8,
+            }}
+          >
+            <span
+              style={{
+                font: 'var(--font-mono-xs)',
+                letterSpacing: '0.1em',
+                textTransform: 'uppercase',
+                color: 'var(--fg-muted, var(--fg-tertiary))',
+              }}
+            >
+              Try →
+            </span>
+            {starterChips.map((label, i) => (
               <button
-                onClick={onSend}
-                disabled={!input.trim() || busy}
-                aria-label="Send"
+                key={label}
+                onClick={() => onFollowupPick(label)}
                 style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 999,
-                  background: input.trim() && !busy ? 'var(--dw-rose)' : 'var(--bg-subtle)',
-                  color: input.trim() && !busy ? '#fff' : 'var(--fg-tertiary)',
+                  padding: '7px 13px',
+                  background: 'var(--bg-default)',
                   border: 'none',
-                  cursor: input.trim() ? 'pointer' : 'default',
-                  display: 'grid',
-                  placeItems: 'center',
-                  font: '600 18px/1 var(--font-sans)',
+                  borderRadius: 999,
+                  boxShadow:
+                    i === 0
+                      ? 'inset 0 0 0 1px var(--dw-rose)'
+                      : 'var(--elev-hairline-soft)',
+                  font: '500 13px/1 var(--font-sans)',
+                  color: i === 0 ? 'var(--dw-rose)' : 'var(--fg-secondary)',
+                  cursor: 'pointer',
                   transition: 'all var(--motion-fast) var(--ease-standard)',
-                  flexShrink: 0,
                 }}
                 onMouseEnter={(e) => {
-                  if (input.trim()) e.currentTarget.style.transform = 'translateY(-1px) scale(1.04)'
+                  if (i === 0) {
+                    e.currentTarget.style.background = 'var(--dw-rose)'
+                    e.currentTarget.style.color = '#fff'
+                  } else {
+                    e.currentTarget.style.background = 'var(--dw-gray-10)'
+                    e.currentTarget.style.color = 'var(--fg-primary)'
+                  }
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0) scale(1)'
+                  e.currentTarget.style.background = 'var(--bg-default)'
+                  e.currentTarget.style.color =
+                    i === 0 ? 'var(--dw-rose)' : 'var(--fg-secondary)'
                 }}
               >
-                ↑
+                {label}
               </button>
-            </div>
+            ))}
           </div>
         </div>
       </main>

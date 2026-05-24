@@ -43,5 +43,46 @@
       "closer": "Happy to chat through how Sample Assist's healthcare + AWS foundation maps to Magentus—let's find a time."
     },
     "computedAt": "2026-05-24T06:59:00.015Z"
+  },
+  "mastt": {
+    "result": {
+      "match": 72,
+      "headline": "Strong backend + infra fit; web stack and AI-assisted shipping are less core to my work.",
+      "reasons": [
+        {
+          "point": "5+ years production cloud engineering",
+          "detail": "Built and operated AWS platforms at scale (EKS, RDS, Postgres, Redis, Secrets Manager) — your construction domain needs reliable ops and deployment discipline."
+        },
+        {
+          "point": "LLM-assisted shipping proven end-to-end",
+          "detail": "Shipped Startiny (iOS App Store) in 2 weeks using Claude Code for implementation while I handled scope, product decisions, and correctness — exactly the AI-coding-tools experience you're asking for."
+        },
+        {
+          "point": "Product mindset + backend ownership",
+          "detail": "Designed and shipped the Coupon module and VNPAY integration at GGJungle — I think about market fit and user value, not just code."
+        },
+        {
+          "point": "TypeScript / NestJS across 20+ services",
+          "detail": "You use TypeScript; I've built production backends in it (NestJS) with clean architecture, shared modules, and consistent standards across a multi-service platform."
+        }
+      ],
+      "relevantSkills": [
+        "TypeScript",
+        "NestJS / TypeScript",
+        "MongoDB",
+        "GitHub Actions",
+        "AWS (general platform knowledge)",
+        "AI-assisted development (Claude Code)",
+        "Postgres / SQL"
+      ],
+      "relevantProjects": [
+        "startiny",
+        "sample-assist",
+        "ggjungle"
+      ],
+      "gaps": "NextJS and GoLang aren't in my core experience — I'm backend + platform focused, not frontend-first. Azure is new to me (I've shipped on AWS). The role emphasizes product + design hat; I'm confident in product thinking but less experienced leading design decisions.",
+      "closer": "Happy to chat about how AI-assisted shipping translates to your stack and whether my backend rigor fits your architecture."
+    },
+    "computedAt": "2026-05-24T09:13:04.723Z"
   }
 }

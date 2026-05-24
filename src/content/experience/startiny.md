@@ -8,6 +8,7 @@ country: Solo
 dates: May 2026 — shipped (active dev paused)
 badge: Side
 accent: blue
+link: https://apps.apple.com/app/startiny-todos-planner/id6762548413
 headline: Shipped Startiny, a to-do app on the iOS App Store, in two weeks of AI-assisted solo development.
 
 tags:

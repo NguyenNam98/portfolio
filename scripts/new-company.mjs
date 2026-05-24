@@ -68,6 +68,7 @@ export const ${ident}: Company = {
   displayName: '${displayName.replace(/'/g, "\\'")}',
   role: '${role.replace(/'/g, "\\'")}',
   heroGreeting: "Hi ${displayName.replace(/"/g, '\\"')} team — here's why this fits.",
+  notes: \`<what you learned researching this company — what they do, products, regulatory context, recent news, competitors, anything you want the chat model to treat as known facts. The longer/richer the better; the model uses this to answer "do you know about us?" questions.>\`,
   keywords: [
     // TODO: lowercase terms from the JD. Multi-word phrases OK (e.g. 'argo cd').
   ],
@@ -108,9 +109,10 @@ const serverStub = [
   `  slug: '${slug}',`,
   `  displayName: '${displayName.replace(/'/g, "\\'")}',`,
   `  role: '${role.replace(/'/g, "\\'")}',`,
-  `  whyFit: [`,
-  `    // TODO: mirror whyFit bullets from src/data/companies/${slug}.ts`,
-  `  ],`,
+  `  // TODO: mirror notes + jdText + whyFit from src/data/companies/${slug}.ts`,
+  `  notes: \`<mirror from src/data/companies/${slug}.ts>\`,`,
+  `  jdText: \`<mirror from src/data/companies/${slug}.ts>\`,`,
+  `  whyFit: [],`,
   `},`,
 ]
 serverContent = insertBeforeClosingMarker(serverContent, 'entries', serverStub)
@@ -120,10 +122,11 @@ console.log(`✓ updated functions/lib/companies.ts`)
 console.log(`
 Next steps:
   1. Open src/data/companies/${slug}.ts
+     - Fill in notes (what you learned about the company — the more detail, the better chat answers)
      - Paste the JD into jdText (keep it inside the backticks, no \${'$'}{} interpolation)
      - Fill in keywords (lowercase terms from the JD)
      - Write 3–5 whyFit bullets
-  2. Mirror the same whyFit bullets in functions/lib/companies.ts
+  2. Mirror notes + jdText + whyFit into functions/lib/companies.ts (the worker can't import from src/)
   3. pnpm precompute:match ${slug}
   4. Visit /for/${slug} to verify, then pnpm deploy:prod
 `)

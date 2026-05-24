@@ -6,6 +6,7 @@ import precomputed from './_precomputed.json'
 import { acme } from './acme'
 import { testCo } from './test-co'
 import { magentus } from './magentus'
+import { mastt } from './mastt'
 // </new-company:imports>
 
 interface PrecomputedEntry {
@@ -30,6 +31,7 @@ const COMPANIES = {
   acme: enrich(acme),
   'test-co': enrich(testCo),
   magentus: enrich(magentus),
+  mastt: enrich(mastt),
   // </new-company:entries>
 } as const satisfies Record<string, Company>
 

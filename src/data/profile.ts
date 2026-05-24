@@ -59,6 +59,7 @@ export interface Project {
   readonly metrics: readonly ProjectMetric[]
   readonly impact: readonly string[]
   readonly tags: readonly string[]
+  readonly link?: string
 }
 
 export interface PitchPoint {
@@ -310,6 +311,7 @@ export const PROJECTS: readonly Project[] = [
     dates: 'May 2026 — shipped (active dev paused)',
     accent: 'blue',
     badge: 'Side',
+    link: 'https://apps.apple.com/app/startiny-todos-planner/id6762548413',
     headline: 'Shipped Startiny, a to-do app on the iOS App Store, in two weeks of AI-assisted solo development.',
     // Metrics dropped. Original three were "2 wk concept → ship",
     // "iOS Native Swift" (false — it's React Native), and "Live on App

@@ -1,27 +1,11 @@
-import { EDUCATION, PROFILE } from '@/data/profile'
-import NamGlyph from '../NamGlyph'
+import { useEffect, useState } from 'react'
+
+import { EDUCATION, PROFILE, SKILL_GROUPS } from '@/data/profile'
 
 interface Props {
   onResetHome: () => void
 }
 
-// Formats today's date in Sydney as `YYYY · MM · DD` — matches the
-// mono · separator style the design uses elsewhere.
-function todayInSydney(): string {
-  const parts = new Intl.DateTimeFormat('en-AU', {
-    timeZone: 'Australia/Sydney',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).formatToParts(new Date())
-  const get = (t: Intl.DateTimeFormatPartTypes) =>
-    parts.find((p) => p.type === t)?.value ?? ''
-  return `${get('year')} · ${get('month')} · ${get('day')}`
-}
-
-// Six chips that signal both halves of the current role at Sample Assist:
-// platform (AWS/EKS/Terraform/Argo CD) + backend (NestJS/Postgres).
-// Tight set so recruiters scan it in one glance.
 const STACK_PILLS: readonly string[] = [
   'AWS',
   'EKS',
@@ -31,134 +15,197 @@ const STACK_PILLS: readonly string[] = [
   'Postgres',
 ]
 
+const TOTAL_SKILLS = SKILL_GROUPS.reduce((n, g) => n + g.items.length, 0)
+
+function formatSydneyDate(d: Date): string {
+  const parts = new Intl.DateTimeFormat('en-AU', {
+    timeZone: 'Australia/Sydney',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).formatToParts(d)
+  const get = (t: Intl.DateTimeFormatPartTypes) =>
+    parts.find((p) => p.type === t)?.value ?? ''
+  return `${get('year')} · ${get('month')} · ${get('day')}`
+}
+
 export default function ChatSidebar({ onResetHome }: Props) {
+  const [now, setNow] = useState(() => new Date())
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60_000)
+    return () => clearInterval(id)
+  }, [])
+
   return (
     <aside
-      className="chat-sidebar"
+      className="cp-sidebar"
       style={{
-        width: 300,
+        width: 340,
         flexShrink: 0,
         borderRight: '1px solid var(--border-subtle)',
-        background: 'var(--bg-raised)',
+        background: 'var(--dw-gray-5)',
         display: 'flex',
         flexDirection: 'column',
-        padding: 'var(--space-5)',
-        gap: 'var(--space-5)',
-        overflow: 'auto',
+        gap: 28,
+        padding: '32px 28px 28px',
+        position: 'sticky',
+        top: 0,
+        height: '100vh',
+        overflowY: 'auto',
       }}
     >
-      {/* 1. Brand (clickable → home) */}
+      {/* Identity (clickable → home) */}
       <button
         onClick={onResetHome}
         title="Back to home"
         style={{
+          display: 'grid',
+          gridTemplateColumns: '56px 1fr',
+          gap: 14,
+          alignItems: 'center',
           background: 'transparent',
           border: 'none',
+          padding: 0,
+          margin: 0,
           cursor: 'pointer',
-          padding: 'var(--space-2)',
-          margin: 'calc(-1 * var(--space-2))',
-          borderRadius: 'var(--radius-md)',
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: 14,
           textAlign: 'left',
-          color: 'var(--fg-primary)',
-          transition: 'background var(--motion-fast) var(--ease-standard)',
+          color: 'inherit',
         }}
-        onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--bg-hover)')}
-        onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
       >
-        <NamGlyph size={48} accent="rose" />
-        <div style={{ display: 'grid', gap: 2, minWidth: 0, paddingTop: 2 }}>
-          <h2
+        <div style={{ position: 'relative', width: 56, height: 56 }}>
+          <img
+            src="/avatar.jpeg"
+            alt={PROFILE.name}
+            width={56}
+            height={56}
+            style={{
+              width: 56,
+              height: 56,
+              borderRadius: 999,
+              objectFit: 'cover',
+              display: 'block',
+              boxShadow: 'var(--elev-hairline)',
+            }}
+          />
+          <span
+            title="Online"
+            style={{
+              position: 'absolute',
+              right: 0,
+              bottom: 2,
+              width: 12,
+              height: 12,
+              background: 'var(--dw-mint, var(--dw-mint-2))',
+              borderRadius: 999,
+              boxShadow: '0 0 0 2.5px var(--dw-gray-5)',
+            }}
+          />
+        </div>
+
+        <div style={{ minWidth: 0 }}>
+          <h1
             style={{
               margin: 0,
-              font: '700 26px/1.05 var(--font-display)',
+              font: '700 22px/1.15 var(--font-sans)',
               letterSpacing: '-0.02em',
               color: 'var(--fg-primary)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
             }}
           >
-            Nam Nguyen<span style={{ color: 'var(--dw-rose)' }}>.</span>
-          </h2>
-          <div
+            {PROFILE.name}
+            <span
+              aria-hidden
+              style={{
+                width: 6,
+                height: 6,
+                background: 'var(--dw-rose)',
+                display: 'inline-block',
+                marginBottom: 2,
+              }}
+            />
+          </h1>
+          <p
             style={{
-              font: '500 12px/16px var(--font-sans)',
+              margin: '2px 0 0',
+              font: '500 13px/1.4 var(--font-sans)',
               color: 'var(--fg-secondary)',
-              marginTop: 2,
             }}
           >
-            {PROFILE.title} · {PROFILE.location.split(',')[0]}
-          </div>
-          <div
+            {PROFILE.title}
+          </p>
+          <p
             style={{
+              margin: '4px 0 0',
               font: 'var(--font-mono-xs)',
-              letterSpacing: '0.08em',
+              letterSpacing: '0.04em',
               color: 'var(--fg-tertiary)',
-              textTransform: 'uppercase',
-              marginTop: 2,
             }}
           >
-            {todayInSydney()}  AEST
-          </div>
+            {PROFILE.location.split(',')[0]} · {formatSydneyDate(now)} AEST
+          </p>
         </div>
       </button>
 
-      {/* 2. Available indicator */}
+      {/* Status pill */}
       <div
         style={{
-          display: 'flex',
+          display: 'inline-flex',
           alignItems: 'center',
-          gap: 6,
-          font: '500 10px/14px var(--font-mono, var(--font-sans))',
-          letterSpacing: '0.12em',
-          textTransform: 'uppercase',
-          color: 'var(--fg-secondary)',
-          marginTop: -8,
+          gap: 8,
+          padding: '8px 12px',
+          background: 'var(--bg-default)',
+          borderRadius: 999,
+          boxShadow: 'var(--elev-hairline-soft)',
+          alignSelf: 'flex-start',
         }}
       >
         <span
           style={{
-            width: 6,
-            height: 6,
+            width: 8,
+            height: 8,
+            background: 'var(--dw-mint, var(--dw-mint-2))',
             borderRadius: 999,
-            background: 'var(--dw-mint-2)',
-            boxShadow: '0 0 0 2px rgba(91,192,176,0.18)',
+            boxShadow: '0 0 0 3px rgba(91,192,176,0.18)',
           }}
         />
-        <span>{PROFILE.available}</span>
-        <span aria-hidden style={{ color: 'var(--fg-tertiary)', opacity: 0.7 }}>·</span>
-        <span style={{ color: 'var(--fg-tertiary)' }}>
+        <span style={{ font: 'var(--font-body-s)', color: 'var(--fg-primary)' }}>
+          <strong style={{ fontWeight: 600 }}>{PROFILE.available}</strong>
+          {' · '}
           {PROFILE.noticePeriod} notice
         </span>
       </div>
 
-      {/* 3. Tagline */}
-      <p
+      {/* Quote with rose left rule */}
+      <blockquote
         style={{
           margin: 0,
-          font: 'italic 400 13px/20px var(--font-serif, var(--font-sans))',
-          fontStyle: 'italic',
+          font: 'italic 400 14px/1.55 var(--font-sans)',
           color: 'var(--fg-secondary)',
+          borderLeft: '2px solid var(--dw-rose)',
+          padding: '4px 0 4px 14px',
         }}
       >
-        “I might not have the answer right now — but I'll find it.”
-      </p>
+        <span style={{ color: 'var(--dw-rose)', fontWeight: 600, marginRight: 2 }}>“</span>
+        I might not have the answer right now — but I'll find it.
+        <span style={{ color: 'var(--dw-rose)', fontWeight: 600, marginLeft: 2 }}>”</span>
+      </blockquote>
 
-      {/* 4. Stack right now */}
-      <Section title="Stack right now">
+      <Section label="Stack right now" hint={`${STACK_PILLS.length} of ${TOTAL_SKILLS}`}>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
           {STACK_PILLS.map((t) => (
             <span
               key={t}
               style={{
-                padding: '4px 10px',
+                padding: '5px 11px',
+                background: 'var(--bg-default)',
                 borderRadius: 999,
-                border: '1px solid var(--border-subtle)',
-                background: 'transparent',
+                boxShadow: 'var(--elev-hairline-soft)',
                 font: 'var(--font-mono-xs)',
                 letterSpacing: '0.06em',
-                color: 'var(--fg-secondary)',
                 textTransform: 'uppercase',
+                color: 'var(--fg-secondary)',
               }}
             >
               {t}
@@ -167,140 +214,154 @@ export default function ChatSidebar({ onResetHome }: Props) {
         </div>
       </Section>
 
-      {/* 5. Education */}
-      <Section title="Education">
+      <Section label="Education">
         <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 14 }}>
           {EDUCATION.map((e) => (
-            <li key={e.degree} style={{ display: 'grid', gap: 2, minWidth: 0 }}>
-              <div
-                style={{
-                  font: '600 13px/18px var(--font-sans)',
-                  color: 'var(--fg-primary)',
-                }}
-              >
+            <li key={e.degree} style={{ minWidth: 0 }}>
+              <div style={{ font: '600 13.5px/1.35 var(--font-sans)', color: 'var(--fg-primary)' }}>
                 {e.degree}
               </div>
               <div
                 style={{
-                  font: 'var(--font-body-s)',
+                  font: '400 13px/1.4 var(--font-sans)',
                   color: 'var(--fg-secondary)',
+                  marginTop: 1,
                 }}
               >
                 {e.school}
+              </div>
+              <div
+                style={{
+                  font: 'var(--font-mono-xs)',
+                  letterSpacing: '0.04em',
+                  color: 'var(--fg-tertiary)',
+                  marginTop: 4,
+                }}
+              >
+                {e.dates}
               </div>
             </li>
           ))}
         </ul>
       </Section>
 
-      {/* spacer pushes Contact to the bottom */}
       <div style={{ flex: 1 }} />
 
-      {/* 6. Contact */}
-      <Section title="Contact">
+      <Section label="Contact">
         <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: 10 }}>
-          <ContactRow
-            label="Email"
-            href={`mailto:${PROFILE.email}`}
-            value={PROFILE.email}
-          />
+          <ContactRow label="Email" value={PROFILE.email} href={`mailto:${PROFILE.email}`} />
           <ContactRow
             label="Phone"
-            href={`tel:${PROFILE.phone.replace(/\s/g, '')}`}
             value={PROFILE.phone}
+            href={`tel:${PROFILE.phone.replace(/\s/g, '')}`}
           />
           <ContactRow
             label="LinkedIn"
-            href={`https://${PROFILE.linkedin}`}
             value={PROFILE.linkedin}
+            href={`https://${PROFILE.linkedin}`}
           />
-          <ContactRow
-            label="GitHub"
-            href={`https://${PROFILE.github}`}
-            value={PROFILE.github}
-          />
+          <ContactRow label="GitHub" value={PROFILE.github} href={`https://${PROFILE.github}`} />
         </ul>
       </Section>
+
     </aside>
   )
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  label,
+  hint,
+  children,
+}: {
+  label: string
+  hint?: string
+  children: React.ReactNode
+}) {
   return (
-    <section style={{ display: 'grid', gap: 'var(--space-3)' }}>
-      <h3
+    <section style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+      <header
         style={{
-          margin: 0,
           display: 'flex',
           alignItems: 'center',
-          gap: 8,
-          font: 'var(--font-mono-xs)',
-          letterSpacing: '0.16em',
-          color: 'var(--fg-tertiary)',
-          textTransform: 'uppercase',
-          fontWeight: 500,
+          justifyContent: 'space-between',
+          gap: 12,
         }}
       >
         <span
-          aria-hidden
           style={{
-            width: 5,
-            height: 5,
-            borderRadius: 999,
-            background: 'var(--dw-mint-2)',
-            display: 'inline-block',
+            font: 'var(--font-mono-xs)',
+            letterSpacing: '0.14em',
+            textTransform: 'uppercase',
+            color: 'var(--fg-tertiary)',
+            position: 'relative',
+            paddingLeft: 14,
           }}
-        />
-        {title}
-      </h3>
-      {children}
+        >
+          <span
+            aria-hidden
+            style={{
+              position: 'absolute',
+              left: 0,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              width: 6,
+              height: 6,
+              background: 'var(--dw-rose)',
+              borderRadius: 999,
+            }}
+          />
+          {label}
+        </span>
+        {hint && (
+          <span
+            style={{
+              font: 'var(--font-mono-xs)',
+              letterSpacing: '0.04em',
+              color: 'var(--fg-muted, var(--fg-tertiary))',
+            }}
+          >
+            {hint}
+          </span>
+        )}
+      </header>
+      <div>{children}</div>
     </section>
   )
 }
 
-function ContactRow({
-  label,
-  href,
-  value,
-}: {
-  label: string
-  href: string
-  value: string
-}) {
+function ContactRow({ label, value, href }: { label: string; value: string; href: string }) {
   return (
     <li
       style={{
         display: 'grid',
-        gridTemplateColumns: '56px 1fr',
-        gap: 12,
-        alignItems: 'baseline',
+        gridTemplateColumns: '64px 1fr',
+        alignItems: 'center',
+        gap: 10,
       }}
     >
-      <div
+      <span
         style={{
           font: 'var(--font-mono-xs)',
-          letterSpacing: '0.08em',
-          color: 'var(--fg-tertiary)',
+          letterSpacing: '0.1em',
           textTransform: 'uppercase',
+          color: 'var(--fg-muted, var(--fg-tertiary))',
         }}
       >
         {label}
-      </div>
+      </span>
       <a
         href={href}
         target="_blank"
         rel="noreferrer"
         style={{
-          font: '500 13px/18px var(--font-sans)',
+          font: '500 13px/1.3 var(--font-sans)',
           color: 'var(--fg-primary)',
           textDecoration: 'none',
-          borderBottom: '1px solid var(--border-subtle)',
-          paddingBottom: 1,
-          minWidth: 0,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          whiteSpace: 'nowrap',
+          wordBreak: 'break-all',
+          transition: 'color var(--motion-fast) var(--ease-standard)',
         }}
+        onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--dw-rose)')}
+        onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--fg-primary)')}
       >
         {value}
       </a>

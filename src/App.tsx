@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 
-import { PITCH, PROFILE, PROJECTS, SKILL_GROUPS } from '@/data/profile'
+import { PITCH, PROFILE, PROJECTS, SKILL_GROUPS, type Pitch } from '@/data/profile'
 import { FOLLOWUPS, looksLikeJD, type JDMatchResult, type QuickAction } from '@/data/prompts'
 import { getCompanyBySlug, type Company } from '@/data/companies'
 import { CompanyProvider } from '@/lib/company-context'
@@ -273,7 +273,11 @@ export default function App() {
         true,
       )
     } else if (id === 'pitch') {
-      void respondWithCard(<PitchCard pitch={PITCH} />, FOLLOWUPS.pitch)
+      if (company) {
+        void submitPitch()
+      } else {
+        void respondWithCard(<PitchCard pitch={PITCH} />, FOLLOWUPS.pitch)
+      }
     } else if (id === 'contact') {
       void respondWithCard(<ContactBlock />, FOLLOWUPS.contact)
     } else if (id === 'resume') {
@@ -373,6 +377,78 @@ export default function App() {
         label: NAM_LABEL,
         content: <div>Network error — try again in a sec?</div>,
         followups: FOLLOWUPS.default,
+      })
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  /* ---------------- Company-tailored pitch (LLM, non-streaming) ---------------- */
+  const submitPitch = async () => {
+    if (!company) return
+    if (view === 'hero') setView('chat')
+
+    setBusy(true)
+    const tid = pushTyping()
+    await sleep(200)
+    replaceMessage(tid, {
+      side: 'nam',
+      content: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <span style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+            Drafting a 30-second pitch tailored for {company.displayName}…
+          </span>
+        </div>
+      ),
+    })
+
+    try {
+      const res = await fetch('/api/pitch', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ company: company.slug }),
+      })
+      const data = (await res.json().catch(() => null)) as
+        | { result?: Pitch; message?: string }
+        | null
+
+      if (!res.ok || !data?.result) {
+        replaceMessage(tid, {
+          side: 'nam',
+          label: NAM_LABEL,
+          content: (
+            <div style={{ display: 'grid', gap: 10 }}>
+              <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+                {data?.message ??
+                  "Couldn't draft a fresh pitch this time — here's my default one."}
+              </div>
+              <PitchCard pitch={PITCH} />
+            </div>
+          ),
+          followups: FOLLOWUPS.pitch,
+        })
+        return
+      }
+
+      replaceMessage(tid, {
+        side: 'nam',
+        label: NAM_LABEL,
+        content: <PitchCard pitch={data.result} />,
+        followups: FOLLOWUPS.pitch,
+      })
+    } catch {
+      replaceMessage(tid, {
+        side: 'nam',
+        label: NAM_LABEL,
+        content: (
+          <div style={{ display: 'grid', gap: 10 }}>
+            <div style={{ font: 'var(--font-body-s)', color: 'var(--fg-secondary)' }}>
+              Network hiccup — here's my default 30-second pitch instead.
+            </div>
+            <PitchCard pitch={PITCH} />
+          </div>
+        ),
+        followups: FOLLOWUPS.pitch,
       })
     } finally {
       setBusy(false)

@@ -5,6 +5,9 @@ export const magentus: Company = {
   displayName: 'Magentus',
   role: 'Software Engineer',
   heroGreeting: "Hi Magentus team — here's why this fits.",
+  notes: `Magentus is an Australian health-tech company building software for clinical workflows. Their main line is a Practice Management SaaS suite used by clinicians and clinic operations. The "Magentus group" framing in their JD implies they operate multiple products under one umbrella — that's why "collaborate across the Magentus group" appears as a responsibility. They position around clinician productivity and patient outcomes; their stated mission is "a healthier society through technology." They explicitly cite AI-assisted development as part of how their engineering teams work day-to-day, and they value exposure to regulated industries (healthcare, pharma, medical devices). Their published values are One Team, Constant Evolution, We Care, Make A Difference, Trust. Australian healthcare context puts them under My Health Records Act and Australian Privacy Act — the exact same regulatory frame I've been delivering against at Sample Assist for the last two years, so the compliance side of their product is familiar ground for me.
+
+TODO (Nam): expand with deeper research before sending the link — known products under the Magentus umbrella, recent funding / M&A activity, any public engineering blog posts, tech stack they've talked about publicly, who their main competitors are in AU health-IT.`,
   keywords: [
     'typescript',
     'node.js',

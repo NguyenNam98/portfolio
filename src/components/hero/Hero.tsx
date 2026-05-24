@@ -7,6 +7,7 @@ import CyclingTagline from './CyclingTagline'
 import LiveClock from './LiveClock'
 import SkillsMarquee from './SkillsMarquee'
 import StatusPill from './StatusPill'
+import WhyFitGrid from './WhyFitGrid'
 
 interface Props {
   onSubmit: (text: string) => void
@@ -37,13 +38,22 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
     onSubmit(t)
   }
 
+  const precomputed = company?.precomputedMatch
+  const hasTailoredBrief = Boolean(company && precomputed)
+
   const chips: readonly QuickAction[] = company
-    ? [
-        { id: 'why-fit', label: `See why I fit at ${company.displayName}` },
-        { id: 'skills', label: 'Show technical skills' },
-        { id: 'projects', label: 'Top projects' },
-        { id: 'pitch', label: 'Why hire me in 30s' },
-      ]
+    ? hasTailoredBrief
+      ? [
+          { id: 'why-fit', label: `See why I fit ${company.displayName}` },
+          { id: 'projects', label: 'Top projects' },
+          { id: 'pitch', label: 'Why hire in 30s' },
+        ]
+      : [
+          { id: 'why-fit', label: `See why I fit at ${company.displayName}` },
+          { id: 'skills', label: 'Show technical skills' },
+          { id: 'projects', label: 'Top projects' },
+          { id: 'pitch', label: 'Why hire me in 30s' },
+        ]
     : HERO_CHIPS
 
   const statusLabel = company
@@ -55,8 +65,15 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
     : 'CHAT-DRIVEN PORTFOLIO'
 
   const placeholder = company
-    ? `Hi ${company.displayName} team — ask anything, or click "See why I fit" →`
+    ? hasTailoredBrief
+      ? `Hi ${company.displayName} team — ask anything →`
+      : `Hi ${company.displayName} team — ask anything, or click "See why I fit" →`
     : 'What role are you hiring for? Paste a JD, or ask me anything…'
+
+  const marqueeItems =
+    hasTailoredBrief && precomputed && precomputed.relevantSkills.length > 0
+      ? precomputed.relevantSkills
+      : MARQUEE_ITEMS
 
   return (
     <div
@@ -148,12 +165,18 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
       >
         <div
           style={{
-            width: 'min(880px, 100%)',
+            width: hasTailoredBrief ? 'min(1280px, 100%)' : 'min(880px, 100%)',
             display: 'grid',
-            gap: 28,
+            gridTemplateColumns: hasTailoredBrief
+              ? 'minmax(0, 1.05fr) minmax(0, 1fr)'
+              : '1fr',
+            columnGap: 56,
+            rowGap: 28,
             textAlign: 'left',
+            alignItems: 'start',
           }}
         >
+          <div style={{ display: 'grid', gap: 28, minWidth: 0 }}>
           <div
             style={{
               font: 'var(--font-mono-xs)',
@@ -170,38 +193,67 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
             {eyebrow}
           </div>
 
-          <h1
-            style={{
-              margin: 0,
-              font: '700 clamp(56px, 11vw, 132px)/0.92 var(--font-display)',
-              letterSpacing: '-0.04em',
-              color: 'var(--fg-primary)',
-              textWrap: 'balance',
-            }}
-          >
-            <span
-              style={{ display: 'block', animation: 'nam-rise 700ms var(--ease-emphatic) both' }}
-            >
-              NAM
-            </span>
-            <span
+          {hasTailoredBrief ? (
+            <h1
               style={{
-                display: 'block',
-                animation: 'nam-rise 700ms 90ms var(--ease-emphatic) both',
+                margin: 0,
+                font: '700 clamp(48px, 8vw, 104px)/0.95 var(--font-display)',
+                letterSpacing: '-0.035em',
+                color: 'var(--fg-primary)',
+                textWrap: 'balance',
               }}
             >
-              NGUYEN<span style={{ color: 'var(--dw-rose)' }}>.</span>
-            </span>
-          </h1>
+              <span
+                style={{ display: 'block', animation: 'nam-rise 700ms var(--ease-emphatic) both' }}
+              >
+                Nam<span style={{ color: 'var(--dw-rose)' }}>.</span>
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  animation: 'nam-rise 700ms 90ms var(--ease-emphatic) both',
+                }}
+              >
+                Nguyen<span style={{ color: 'var(--dw-rose)' }}>.</span>
+              </span>
+            </h1>
+          ) : (
+            <h1
+              style={{
+                margin: 0,
+                font: '700 clamp(56px, 11vw, 132px)/0.92 var(--font-display)',
+                letterSpacing: '-0.04em',
+                color: 'var(--fg-primary)',
+                textWrap: 'balance',
+              }}
+            >
+              <span
+                style={{ display: 'block', animation: 'nam-rise 700ms var(--ease-emphatic) both' }}
+              >
+                NAM
+              </span>
+              <span
+                style={{
+                  display: 'block',
+                  animation: 'nam-rise 700ms 90ms var(--ease-emphatic) both',
+                }}
+              >
+                NGUYEN<span style={{ color: 'var(--dw-rose)' }}>.</span>
+              </span>
+            </h1>
+          )}
 
           <div
             style={{
-              font: '500 clamp(20px, 2.4vw, 28px)/1.4 var(--font-sans)',
+              font: hasTailoredBrief
+                ? '500 clamp(18px, 1.8vw, 22px)/1.45 var(--font-sans)'
+                : '500 clamp(20px, 2.4vw, 28px)/1.4 var(--font-sans)',
               color: 'var(--fg-secondary)',
               animation: 'nam-rise 700ms 220ms var(--ease-emphatic) both',
+              textWrap: 'pretty',
             }}
           >
-            <CyclingTagline />
+            {hasTailoredBrief && precomputed ? precomputed.headline : <CyclingTagline />}
           </div>
 
           <div
@@ -343,11 +395,23 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
               ))}
             </div>
           </div>
+          </div>
+
+          {hasTailoredBrief && precomputed && (
+            <div
+              style={{
+                minWidth: 0,
+                animation: 'nam-rise 700ms 260ms var(--ease-emphatic) both',
+              }}
+            >
+              <WhyFitGrid result={precomputed} />
+            </div>
+          )}
         </div>
       </div>
 
       {/* Marquee */}
-      <SkillsMarquee items={MARQUEE_ITEMS} />
+      <SkillsMarquee items={marqueeItems} />
     </div>
   )
 }

@@ -180,8 +180,9 @@ function buildExperienceBlock({ meta, bullets }, label) {
   const location = meta.location || ''
   const headlineSep = meta.headline ? `\n${meta.headline}` : ''
   const locSep = location ? `, ${location}` : ''
+  const linkLine = meta.link ? `\nLink: ${meta.link}` : ''
   const list = bullets.map((b) => `- ${b}`).join('\n')
-  return `${label} — ${company} (${dates}${locSep})\n${role}${headlineSep}\n${list}`
+  return `${label} — ${company} (${dates}${locSep})\n${role}${headlineSep}${linkLine}\n${list}`
 }
 
 /* ============================================================
