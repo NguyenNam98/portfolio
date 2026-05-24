@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { MARQUEE_ITEMS, type QuickAction } from '@/data/prompts'
+import { useCompany } from '@/lib/company-context'
 import AsteriskBg from './AsteriskBg'
 import CyclingTagline from './CyclingTagline'
 import LiveClock from './LiveClock'
@@ -23,6 +24,7 @@ const HERO_CHIPS: readonly QuickAction[] = [
 export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
   const [text, setText] = useState('')
   const taRef = useRef<HTMLTextAreaElement | null>(null)
+  const company = useCompany()
 
   useEffect(() => {
     taRef.current?.focus()
@@ -34,6 +36,27 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
     setText('')
     onSubmit(t)
   }
+
+  const chips: readonly QuickAction[] = company
+    ? [
+        { id: 'why-fit', label: `See why I fit at ${company.displayName}` },
+        { id: 'skills', label: 'Show technical skills' },
+        { id: 'projects', label: 'Top projects' },
+        { id: 'pitch', label: 'Why hire me in 30s' },
+      ]
+    : HERO_CHIPS
+
+  const statusLabel = company
+    ? `ONLINE · TAILORED FOR ${company.displayName.toUpperCase()}`
+    : 'ONLINE · OPEN TO ROLES'
+
+  const eyebrow = company
+    ? `FOR ${company.displayName.toUpperCase()} · ${company.role.toUpperCase()}`
+    : 'CHAT-DRIVEN PORTFOLIO'
+
+  const placeholder = company
+    ? `Hi ${company.displayName} team — ask anything, or click "See why I fit" →`
+    : 'What role are you hiring for? Paste a JD, or ask me anything…'
 
   return (
     <div
@@ -65,7 +88,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
-          <StatusPill label="ONLINE · OPEN TO ROLES" />
+          <StatusPill label={statusLabel} />
           <span
             style={{
               font: 'var(--font-mono-xs)',
@@ -144,7 +167,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
             <span
               style={{ display: 'inline-block', width: 28, height: 1, background: 'var(--dw-rose)' }}
             />
-            CHAT-DRIVEN PORTFOLIO
+            {eyebrow}
           </div>
 
           <h1
@@ -233,7 +256,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
                     send()
                   }
                 }}
-                placeholder="What role are you hiring for? Paste a JD, or ask me anything…"
+                placeholder={placeholder}
                 style={{
                   flex: 1,
                   border: 'none',
@@ -287,7 +310,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
               >
                 Try →
               </span>
-              {HERO_CHIPS.map((a, i) => (
+              {chips.map((a, i) => (
                 <button
                   key={a.id}
                   onClick={() => (a.id === 'jd' ? onPasteJD() : onAction(a))}

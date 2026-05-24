@@ -14,7 +14,7 @@ interface Props {
 export default function NamGlyph({ size = 28 }: Props) {
   return (
     <img
-      src="/avatar.png"
+      src="/avatar.jpeg"
       alt="Nam"
       width={size}
       height={size}

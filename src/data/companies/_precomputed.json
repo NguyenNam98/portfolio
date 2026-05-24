@@ -1,0 +1,47 @@
+{
+  "magentus": {
+    "result": {
+      "match": 82,
+      "headline": "Strong fit—healthcare SaaS, AWS, TypeScript, DevOps, and regulated-industry experience.",
+      "reasons": [
+        {
+          "point": "Healthcare SaaS + regulated-industry experience",
+          "detail": "Built Sample Assist's drug-testing platform from zero on AWS, aligned with Australian Privacy Act and My Health Records Act requirements—direct healthcare compliance precedent."
+        },
+        {
+          "point": "TypeScript / Node.js / React production depth",
+          "detail": "5+ years production cloud work; built 20+ NestJS services in TypeScript at Sample Assist, integrated React across the product suite, all shipping to real users."
+        },
+        {
+          "point": "AWS end-to-end (serverless, containers, networking, databases)",
+          "detail": "Designed and provisioned VPC, EKS, RDS Postgres, ALB, IAM in Terraform; integrated AWS Secrets Manager; cut 30% spend through right-sizing—exactly the hands-on AWS scope the JD describes."
+        },
+        {
+          "point": "DevOps + modern practices embedded in delivery",
+          "detail": "Built GitOps pipeline (GitHub Actions + Argo CD), multi-env Helm deploys, Prometheus + Grafana observability, mobile CI/CD with Fastlane—DevOps is how I ship, not a separate function."
+        },
+        {
+          "point": "AI-assisted development as a working practice",
+          "detail": "Shipped Startiny solo to the App Store using Claude Code for implementation; actively use AI in production workflows, not just theory."
+        }
+      ],
+      "relevantSkills": [
+        "AWS EKS, ECS / Fargate, EC2, ALB / AWS Load Balancer Controller, RDS Postgres",
+        "NestJS / TypeScript",
+        "Terraform",
+        "GitHub Actions, Argo CD, GitOps workflows",
+        "Prometheus, Grafana, Structured logging",
+        "IAM least-privilege, Encryption at rest / in transit",
+        "React Native (Expo)",
+        "Postgres / SQL"
+      ],
+      "relevantProjects": [
+        "sample-assist",
+        "startiny"
+      ],
+      "gaps": "Haven't shipped React (web) as a primary platform—Sample Assist is mobile-first, so my React depth is narrower than the JD might expect.",
+      "closer": "Happy to chat through how Sample Assist's healthcare + AWS foundation maps to Magentus—let's find a time."
+    },
+    "computedAt": "2026-05-24T06:59:00.015Z"
+  }
+}

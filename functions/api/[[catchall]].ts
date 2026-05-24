@@ -1,6 +1,7 @@
 import Anthropic from '@anthropic-ai/sdk'
 import { Hono } from 'hono'
 import { handle } from 'hono/cloudflare-pages'
+import { FACTS_BLOCK } from '../lib/facts'
 
 type Bindings = {
   ANTHROPIC_API_KEY: string
@@ -15,74 +16,11 @@ type Bindings = {
 const app = new Hono<{ Bindings: Bindings }>().basePath('/api')
 
 /* ============================================================
-   Voice spec, shared by /api/chat and /api/jd-match.
-   First person — "I", "my" — because the front-end renders
-   responses as chat bubbles from "Nam" to the visitor.
-   ============================================================ */
-const FACTS_BLOCK = `IDENTITY
-I'm Nam Nguyen (full name Van Nam Nguyen), a DevOps Engineer in Sydney with 5+ years of production cloud experience. Originally from Ho Chi Minh City, currently finishing a Master's at the University of Wollongong (2023 — 2025).
-
-CURRENT ROLE — Sample Assist (Oct 2023 — Present, Wollongong, NSW)
-Software Engineer, DevOps. I built the production platform from infrastructure up:
-- Operate prod workloads on Amazon EKS: Deployments, Services, Ingress, Helm charts, daily kubectl ops
-- Designed the full AWS stack as Terraform: EKS, RDS, ElastiCache, ALB, Route 53, VPC, IAM, multi-env
-- Built GitOps with Argo CD; releases went from manual multi-hour to one-click
-- Stood up Prometheus + Grafana with dashboards, alerts, and on-call runbooks
-- Lead 5 engineers on architecture, standards, and modern AI tooling rollout (Cursor / Claude Code / Copilot)
-- Migrated 100+ tables from Firebase to RDS Postgres with zero downtime via dual-write window + shadow reads
-- Backend in NestJS, containerized with Docker, CI/CD via GitHub Actions
-
-PREVIOUS — GGJungle VN (Mar 2022 — Jun 2023, Ho Chi Minh City)
-Backend / Cloud Engineer for Japanese enterprise customers:
-- Operated AWS (EC2, CloudFront, SNS) for production workloads
-- Customised Docker configurations, improved deployment reliability
-- Tuned legacy MySQL — query/index work + introduced first backup & DR procedures
-- Built Node.js / NestJS APIs; integrated VNPAY payments (delivered a coupon feature that lifted sales 20%)
-- Worked directly with Japanese enterprise customers on requirements & incident resolution
-
-EARLIER — FPT Tan Thuan Telecom (Apr 2021 — Feb 2022, Ho Chi Minh City)
-Software Engineer in enterprise IT services — first formal SDLC exposure, backend + tooling.
-
-SIDE PROJECT — Startiny (May 2026 — Present)
-iOS productivity app shipped solo to App Store in 2 weeks. Native Swift frontend, Cloudflare Worker backend that proxies Anthropic API calls (key never ships in the bundle), Cloudflare KV for rate-limit state. Proof I can take an idea from zero to shipped without a team.
-
-EDUCATION
-- Master of Computer Science, University of Wollongong (Jul 2023 — Jul 2025)
-- BSc Computer Science, Vietnam National University — UIT (Sep 2016 — Sep 2020)
-
-STACK
-- Cloud: AWS (EKS, ECS, Fargate, EC2, ALB, Route 53, S3, VPC, IAM, RDS, ElastiCache, CloudFront, SNS)
-- Containers / k8s: Amazon EKS (prod), kubectl, Helm, Docker, ingress controllers
-- IaC: Terraform (extensive prod), CloudFormation (familiar)
-- CI/CD: GitHub Actions, Argo CD GitOps, multi-env deploys
-- Observability: Prometheus, Grafana, CloudWatch, structured logging, on-call response
-- Security: IAM least-privilege, AWS Security Hub, GuardDuty, Inspector, secrets management
-- Languages: Bash, Python, Node.js / NestJS, SQL, MySQL, Swift / iOS
-- AI engineering (current learning): Anthropic Claude SDK, prompt caching, context engineering
-
-LANGUAGES SPOKEN
-Vietnamese (native), English (professional), some Japanese (from GGJungle client work).
-
-LOOKING FOR
-Senior DevOps / Platform engineering roles, or AI-engineering roles where infra + LLM ops overlap. Sydney-based, remote-friendly. Currently working at Sample Assist — open to conversations, not urgently job hunting.
-
-CONTACT
-- Email: michalnam98@gmail.com
-- Phone: 0492 911 759
-- LinkedIn: linkedin.com/in/nam-nguyen
-- GitHub: github.com/NguyenNam98
-
-THIS SITE
-Chat-driven portfolio. Vite + React 19 + TS + Tailwind v4 on Cloudflare Pages. This chat runs on Hono on Cloudflare Pages Functions, using Claude Haiku 4.5 via the Anthropic SDK with prompt caching enabled on the system prompt. Per-IP daily rate limit via Cloudflare KV.
-
-NOTABLE WINS WORTH REFERENCING
-- The Firebase → RDS migration at Sample Assist (100+ tables, zero downtime, dual-write window strategy) is the strongest senior-platform-engineering proof point.
-- The Startiny solo ship is the strongest end-to-end / speed proof point.
-- The GGJungle coupon feature (20% sales lift) is the strongest "thinks about the product, not just the code" proof point.
-- The Japanese client work is the strongest cross-cultural / soft-skills proof point.`
-
-/* ============================================================
    System prompt for /api/chat (free-text Q&A)
+   Voice spec shared with /api/jd-match. First person ("I", "my")
+   because the front-end renders responses as chat bubbles from Nam.
+   FACTS_BLOCK is auto-generated from src/content/experience/*.md
+   by scripts/build-facts.mjs — don't edit it by hand.
    ============================================================ */
 const CHAT_SYSTEM_PROMPT = `You are Nam Nguyen replying directly to a recruiter on his personal chat-driven portfolio site.
 

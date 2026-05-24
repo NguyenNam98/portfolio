@@ -5,13 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "pnpm typecheck && vite build",
+    "build": "pnpm build:facts && pnpm typecheck && vite build",
+    "build:facts": "node scripts/build-facts.mjs",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.worker.json --noEmit",
     "deploy:prod": "pnpm build && wrangler pages deploy dist --branch=main",
     "deploy:preview": "pnpm build && wrangler pages deploy dist --branch=preview",
     "dev:pages": "pnpm build && wrangler pages dev dist",
-    "tail": "wrangler pages deployment tail --project-name personal-website"
+    "tail": "wrangler pages deployment tail --project-name personal-website",
+    "precompute:match": "node scripts/precompute-match.mjs",
+    "new-company": "node scripts/new-company.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.98.0",

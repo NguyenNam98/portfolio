@@ -1,17 +1,33 @@
-import type { Pitch } from '@/data/profile'
-import { useCompany } from '@/lib/company-context'
-import { Highlighted } from '@/lib/highlight'
+import type { Company } from '@/data/companies'
 
 interface Props {
-  pitch: Pitch
+  company: Company
 }
 
-export default function PitchCard({ pitch }: Props) {
-  const company = useCompany()
-  const keywords = company?.keywords ?? []
-
+export default function WhyFitCard({ company }: Props) {
   return (
     <div style={{ display: 'grid', gap: 'var(--space-4)' }}>
+      <div
+        style={{
+          font: 'var(--font-mono-xs)',
+          letterSpacing: '0.14em',
+          color: 'var(--dw-rose)',
+          display: 'inline-flex',
+          alignItems: 'center',
+          gap: 10,
+        }}
+      >
+        <span
+          style={{
+            display: 'inline-block',
+            width: 22,
+            height: 1,
+            background: 'var(--dw-rose)',
+          }}
+        />
+        PERSONALIZED FOR {company.displayName.toUpperCase()}
+      </div>
+
       <div
         style={{
           font: '600 22px/30px var(--font-sans)',
@@ -20,10 +36,11 @@ export default function PitchCard({ pitch }: Props) {
           textWrap: 'pretty',
         }}
       >
-        "<Highlighted text={pitch.headline} keywords={keywords} />"
+        Why I'm a fit for {company.role} at {company.displayName}
       </div>
+
       <div style={{ display: 'grid', gap: 'var(--space-3)' }}>
-        {pitch.points.map((p, i) => (
+        {company.whyFit.map((b, i) => (
           <div
             key={i}
             style={{
@@ -43,8 +60,10 @@ export default function PitchCard({ pitch }: Props) {
               0{i + 1}
             </span>
             <div>
-              <div style={{ font: '600 14px/20px var(--font-sans)', color: 'var(--fg-primary)' }}>
-                <Highlighted text={p.k} keywords={keywords} />
+              <div
+                style={{ font: '600 14px/20px var(--font-sans)', color: 'var(--fg-primary)' }}
+              >
+                {b.point}
               </div>
               <div
                 style={{
@@ -53,7 +72,7 @@ export default function PitchCard({ pitch }: Props) {
                   marginTop: 2,
                 }}
               >
-                <Highlighted text={p.v} keywords={keywords} />
+                {b.detail}
               </div>
             </div>
           </div>

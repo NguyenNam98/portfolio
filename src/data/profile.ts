@@ -88,7 +88,7 @@ export const PROFILE: Profile = {
   location: 'Sydney, Australia',
   email: 'michalnam98@gmail.com',
   phone: '0492 911 759',
-  linkedin: 'linkedin.com/in/nam-nguyen',
+  linkedin: 'linkedin.com/in/nam-nguyen98',
   github: 'github.com/NguyenNam98',
   currentlyAt: 'Sample Assist',
   yearsExp: '5+',
@@ -241,13 +241,9 @@ export const PROJECTS: readonly Project[] = [
     badge: 'Current',
     headline: 'Drug-testing platform for hospitals and clinics; handles My Health Records Act–regulated data including Individual Healthcare Identifiers (IHIs). Live in production with hundreds of users across 5–20 customer clinics.',
     metrics: [
-      // "zero downtime" removed — product was pre-launch.
-      { value: '100+', label: 'Tables migrated', caption: 'Firestore → Postgres, pre-launch replatform' },
-      // "5 engineers led" → 3 (honest, and only mentored, not formally managed).
-      { value: '~30%', label: 'AWS spend cut', caption: 'Right-sizing, off-hours scale-down, VPC endpoints' },
-      // "1-click releases" wasn't a story we developed; replaced with
-      // the suite-scale metric that anchors the SSO + auth work.
-      { value: '7 apps', label: 'One login', caption: 'NestJS auth service powering 4 mobile + 3 web apps' },
+      { value: '~30%', label: 'AWS spend cut', caption: 'Right-sizing + off-hours scale-down' },
+      { value: '20+', label: 'Services on EKS', caption: 'Containerised NestJS backends, Helm + Argo CD' },
+      { value: '7 apps', label: 'SSO for Authentication', caption: 'NestJS auth service powering 4 mobile + 3 web apps' },
     ],
     impact: [
       'Led the migration off Firebase + Google Cloud Functions onto AWS in ~3 months with one other engineer: Firestore → RDS Postgres (100+ tables), Cloud Functions → containerised NestJS services on EKS, Firebase Auth → custom in-house auth, Firebase Storage → S3.',

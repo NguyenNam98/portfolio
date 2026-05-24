@@ -1,8 +1,23 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import type { Project } from '@/data/profile'
+import { useCompany } from '@/lib/company-context'
+import { countMatches, matchesAnyKeyword } from '@/lib/highlight'
 import { accentColor } from '../accent'
 import MetricTile from './MetricTile'
+
+function projectMatchCount(project: Project, keywords: readonly string[]): number {
+  if (keywords.length === 0) return 0
+  const haystack = [
+    project.headline,
+    project.short,
+    project.company,
+    project.role,
+    ...project.tags,
+    ...project.impact,
+  ].join(' \n ')
+  return countMatches(haystack, keywords)
+}
 
 interface ShowcaseProps {
   projects: readonly Project[]
@@ -14,6 +29,8 @@ interface SpotlightProps {
 
 function ProjectSpotlight({ project }: SpotlightProps) {
   const color = accentColor(project.accent)
+  const company = useCompany()
+  const keywords = company?.keywords ?? []
   return (
     <article
       key={project.id}
@@ -160,21 +177,27 @@ function ProjectSpotlight({ project }: SpotlightProps) {
           Stack
         </h4>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
-          {project.tags.map((tag) => (
-            <span
-              key={tag}
-              style={{
-                padding: '4px 10px',
-                borderRadius: 999,
-                border: '1px solid var(--border-subtle)',
-                background: 'transparent',
-                font: '500 12px/16px var(--font-sans)',
-                color: 'var(--fg-secondary)',
-              }}
-            >
-              {tag}
-            </span>
-          ))}
+          {project.tags.map((tag) => {
+            const matched = matchesAnyKeyword(tag, keywords)
+            return (
+              <span
+                key={tag}
+                title={matched && company ? `Match for ${company.displayName}` : undefined}
+                style={{
+                  padding: '4px 10px',
+                  borderRadius: 999,
+                  border: matched
+                    ? '1px solid var(--dw-rose)'
+                    : '1px solid var(--border-subtle)',
+                  background: matched ? 'rgba(224,76,113,0.10)' : 'transparent',
+                  font: '500 12px/16px var(--font-sans)',
+                  color: matched ? 'var(--fg-primary)' : 'var(--fg-secondary)',
+                }}
+              >
+                {tag}
+              </span>
+            )
+          })}
         </div>
       </section>
     </article>
@@ -185,9 +208,10 @@ interface TabsProps {
   projects: readonly Project[]
   activeIdx: number
   onPick: (i: number) => void
+  matchCounts?: readonly number[]
 }
 
-function ProjectTabs({ projects, activeIdx, onPick }: TabsProps) {
+function ProjectTabs({ projects, activeIdx, onPick, matchCounts }: TabsProps) {
   return (
     <div
       role="tablist"
@@ -201,6 +225,7 @@ function ProjectTabs({ projects, activeIdx, onPick }: TabsProps) {
       {projects.map((p, i) => {
         const active = i === activeIdx
         const color = accentColor(p.accent)
+        const matches = matchCounts?.[i] ?? 0
         return (
           <button
             key={p.id}
@@ -218,6 +243,9 @@ function ProjectTabs({ projects, activeIdx, onPick }: TabsProps) {
               color: active ? 'var(--fg-primary)' : 'var(--fg-tertiary)',
               font: `${active ? 600 : 500} 14px/18px var(--font-sans)`,
               transition: 'color var(--motion-fast) var(--ease-standard)',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
             }}
             onMouseEnter={(e) => {
               if (!active) e.currentTarget.style.color = 'var(--fg-secondary)'
@@ -226,7 +254,26 @@ function ProjectTabs({ projects, activeIdx, onPick }: TabsProps) {
               if (!active) e.currentTarget.style.color = 'var(--fg-tertiary)'
             }}
           >
-            {p.short}
+            <span>{p.short}</span>
+            {matches > 0 && (
+              <span
+                aria-label={`${matches} keyword match${matches === 1 ? '' : 'es'}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  padding: '2px 7px',
+                  borderRadius: 999,
+                  background: 'rgba(224,76,113,0.14)',
+                  color: 'var(--dw-rose)',
+                  font: '600 10px/14px var(--font-mono)',
+                  letterSpacing: '0.06em',
+                  fontVariantNumeric: 'tabular-nums',
+                }}
+              >
+                ● {matches}
+              </span>
+            )}
           </button>
         )
       })}
@@ -235,13 +282,34 @@ function ProjectTabs({ projects, activeIdx, onPick }: TabsProps) {
 }
 
 export default function ProjectsShowcase({ projects }: ShowcaseProps) {
+  const company = useCompany()
+
+  const { ordered, matchCounts } = useMemo(() => {
+    const counts = projects.map((p) => projectMatchCount(p, company?.keywords ?? []))
+    const hasAnyMatch = counts.some((n) => n > 0)
+    if (!hasAnyMatch) {
+      return { ordered: projects, matchCounts: counts }
+    }
+    const indices = projects.map((_, i) => i)
+    indices.sort((a, b) => counts[b]! - counts[a]!)
+    return {
+      ordered: indices.map((i) => projects[i]!),
+      matchCounts: indices.map((i) => counts[i]!),
+    }
+  }, [projects, company])
+
   const [idx, setIdx] = useState(0)
-  const active = projects[idx]
+  const active = ordered[idx]
   if (!active) return null
 
   return (
     <div style={{ display: 'grid', gap: 28 }}>
-      <ProjectTabs projects={projects} activeIdx={idx} onPick={setIdx} />
+      <ProjectTabs
+        projects={ordered}
+        activeIdx={idx}
+        onPick={setIdx}
+        matchCounts={matchCounts}
+      />
       <ProjectSpotlight project={active} />
     </div>
   )

@@ -12,7 +12,7 @@ import type { ProjectId } from './profile'
    Quick-action chips (hero + chat composer)
    ============================================================ */
 export interface QuickAction {
-  readonly id: 'skills' | 'projects' | 'pitch' | 'jd' | 'contact' | 'resume'
+  readonly id: 'skills' | 'projects' | 'pitch' | 'jd' | 'contact' | 'resume' | 'why-fit'
   readonly label: string
 }
 

@@ -7,6 +7,8 @@ import type {
   SkillGroup,
   SkillItem,
 } from '@/data/profile'
+import { useCompany } from '@/lib/company-context'
+import { matchesAnyKeyword } from '@/lib/highlight'
 import { accentColor } from '../accent'
 
 interface SkillChipProps {
@@ -42,17 +44,36 @@ interface ProvenanceProps {
   projects: readonly Project[]
   dim?: boolean
   focusProject?: ProjectId | null
+  highlightForCompany?: string | null
 }
 
-function SkillChipWithProvenance({ skill, projects, dim = false, focusProject = null }: ProvenanceProps) {
+function SkillChipWithProvenance({
+  skill,
+  projects,
+  dim = false,
+  focusProject = null,
+  highlightForCompany = null,
+}: ProvenanceProps) {
   const projMap = Object.fromEntries(projects.map((p) => [p.id, p])) as Record<ProjectId, Project>
   const ids = skill.projects
   const usedAt = ids.map((id) => projMap[id]).filter(Boolean)
-  const tooltip = usedAt.length
+  const baseTooltip = usedAt.length
     ? `Used at: ${usedAt.map((p) => p.short).join(' · ')}`
     : 'No specific project — exposure / familiarity'
+  const tooltip = highlightForCompany
+    ? `${baseTooltip} · Match for ${highlightForCompany}`
+    : baseTooltip
   const isFocused = focusProject !== null && ids.includes(focusProject)
   const focusColor = focusProject ? accentColor(projMap[focusProject]?.accent) : 'var(--dw-rose)'
+
+  let boxShadow: string
+  if (isFocused) {
+    boxShadow = `0 0 0 1.5px ${focusColor}, var(--elev-1)`
+  } else if (highlightForCompany) {
+    boxShadow = '0 0 0 1.5px var(--dw-rose), var(--elev-1)'
+  } else {
+    boxShadow = 'var(--elev-hairline)'
+  }
 
   return (
     <span
@@ -64,7 +85,7 @@ function SkillChipWithProvenance({ skill, projects, dim = false, focusProject = 
         padding: '7px 12px',
         borderRadius: 999,
         background: 'var(--bg-default)',
-        boxShadow: isFocused ? `0 0 0 1.5px ${focusColor}, var(--elev-1)` : 'var(--elev-hairline)',
+        boxShadow,
         font: '500 13px/16px var(--font-sans)',
         color: 'var(--fg-primary)',
         whiteSpace: 'nowrap',
@@ -118,6 +139,7 @@ interface Props {
 
 export default function SkillsCard({ groups, projects }: Props) {
   const [filter, setFilter] = useState<ProjectId | null>(null)
+  const company = useCompany()
 
   const counts = useMemo(() => {
     const c: Record<string, number> = {}
@@ -287,6 +309,10 @@ export default function SkillsCard({ groups, projects }: Props) {
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
                 {g.items.map((s, i) => {
                   const matches = !filter || s.projects.includes(filter)
+                  const keywordMatch =
+                    company && matchesAnyKeyword(s.name, company.keywords)
+                      ? company.displayName
+                      : null
                   return (
                     <span
                       key={s.name}
@@ -300,6 +326,7 @@ export default function SkillsCard({ groups, projects }: Props) {
                         projects={projects}
                         dim={!matches}
                         focusProject={filter}
+                        highlightForCompany={keywordMatch}
                       />
                     </span>
                   )

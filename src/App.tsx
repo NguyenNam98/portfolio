@@ -2,6 +2,8 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 
 import { PITCH, PROFILE, PROJECTS, SKILL_GROUPS } from '@/data/profile'
 import { FOLLOWUPS, looksLikeJD, type JDMatchResult, type QuickAction } from '@/data/prompts'
+import { getCompanyBySlug, type Company } from '@/data/companies'
+import { CompanyProvider } from '@/lib/company-context'
 import ChatView, { type ChatMessage } from '@/components/chat/ChatView'
 import Hero from '@/components/hero/Hero'
 import JDModal from '@/components/JDModal'
@@ -9,6 +11,14 @@ import JDMatchCard from '@/components/cards/JDMatchCard'
 import PitchCard from '@/components/cards/PitchCard'
 import ProjectsShowcase from '@/components/cards/ProjectsShowcase'
 import SkillsCard from '@/components/cards/SkillsCard'
+import WhyFitCard from '@/components/cards/WhyFitCard'
+
+function detectCompany(): Company | null {
+  if (typeof window === 'undefined') return null
+  const m = window.location.pathname.match(/^\/for\/([a-z0-9-]+)\/?$/i)
+  const slug = m?.[1] ?? new URLSearchParams(window.location.search).get('for')
+  return slug ? getCompanyBySlug(slug) : null
+}
 
 const NAM_LABEL = 'Nam'
 const HR_LABEL = 'Recruiter'
@@ -112,6 +122,49 @@ function ResumeBlock() {
   )
 }
 
+function PrecomputedBadge({
+  companyName,
+  computedAt,
+}: {
+  companyName: string
+  computedAt?: string
+}) {
+  const dateLabel = computedAt
+    ? new Date(computedAt).toLocaleDateString(undefined, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    : null
+  return (
+    <div
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 10,
+        font: 'var(--font-mono-xs)',
+        letterSpacing: '0.12em',
+        textTransform: 'uppercase',
+        color: 'var(--dw-rose)',
+        width: 'fit-content',
+      }}
+    >
+      <span
+        style={{
+          display: 'inline-block',
+          width: 22,
+          height: 1,
+          background: 'var(--dw-rose)',
+        }}
+      />
+      Pre-analyzed for {companyName}
+      {dateLabel && (
+        <span style={{ color: 'var(--fg-tertiary)' }}>· {dateLabel}</span>
+      )}
+    </div>
+  )
+}
+
 function JDExcerpt({ text }: { text: string }) {
   const truncated = text.length > 280 ? text.slice(0, 280) + '…' : text
   const lines = truncated.split('\n').slice(0, 6).join('\n')
@@ -150,6 +203,7 @@ export default function App() {
   const [input, setInput] = useState('')
   const [busy, setBusy] = useState(false)
   const [jdOpen, setJdOpen] = useState(false)
+  const [company] = useState<Company | null>(() => detectCompany())
 
   const abortRef = useRef<AbortController | null>(null)
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -224,6 +278,30 @@ export default function App() {
       void respondWithCard(<ContactBlock />, FOLLOWUPS.contact)
     } else if (id === 'resume') {
       void respondWithCard(<ResumeBlock />, FOLLOWUPS.contact)
+    } else if (id === 'why-fit' && company) {
+      void respondWithCard(
+        <div style={{ display: 'grid', gap: 22 }}>
+          <WhyFitCard company={company} />
+          {company.precomputedMatch && (
+            <div
+              style={{
+                display: 'grid',
+                gap: 14,
+                paddingTop: 18,
+                borderTop: '1px solid var(--border-subtle)',
+              }}
+            >
+              <PrecomputedBadge
+                companyName={company.displayName}
+                computedAt={company.precomputedMatchAt}
+              />
+              <JDMatchCard result={company.precomputedMatch} projects={PROJECTS} />
+            </div>
+          )}
+        </div>,
+        FOLLOWUPS.jd,
+        true,
+      )
     }
   }
 
@@ -254,7 +332,7 @@ export default function App() {
       const res = await fetch('/api/jd-match', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ jd: trimmed }),
+        body: JSON.stringify({ jd: trimmed, company: company?.slug }),
       })
       const data = (await res.json().catch(() => null)) as
         | { result?: JDMatchResult; message?: string }
@@ -319,7 +397,7 @@ export default function App() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ question: text }),
+        body: JSON.stringify({ question: text, company: company?.slug }),
         signal: ctrl.signal,
       })
 
@@ -483,38 +561,40 @@ export default function App() {
 
   /* ---------------- Render ---------------- */
   return (
-    <div
-      style={{
-        height: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-        background: 'var(--bg-default)',
-        color: 'var(--fg-primary)',
-        fontFamily: 'var(--font-sans)',
-      }}
-    >
-      {view === 'hero' ? (
-        <Hero
-          onSubmit={(t) => onSend(t)}
-          onAction={handleQuickAction}
-          onPasteJD={() => setJdOpen(true)}
-        />
-      ) : (
-        <ChatView
-          messages={messages}
-          input={input}
-          setInput={setInput}
-          onSend={() => onSend()}
-          onPasteJD={() => setJdOpen(true)}
-          onResetHome={resetConversation}
-          onFollowupPick={onFollowupPick}
-          busy={busy}
-          scrollRef={scrollRef}
-        />
-      )}
+    <CompanyProvider company={company}>
+      <div
+        style={{
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'hidden',
+          background: 'var(--bg-default)',
+          color: 'var(--fg-primary)',
+          fontFamily: 'var(--font-sans)',
+        }}
+      >
+        {view === 'hero' ? (
+          <Hero
+            onSubmit={(t) => onSend(t)}
+            onAction={handleQuickAction}
+            onPasteJD={() => setJdOpen(true)}
+          />
+        ) : (
+          <ChatView
+            messages={messages}
+            input={input}
+            setInput={setInput}
+            onSend={() => onSend()}
+            onPasteJD={() => setJdOpen(true)}
+            onResetHome={resetConversation}
+            onFollowupPick={onFollowupPick}
+            busy={busy}
+            scrollRef={scrollRef}
+          />
+        )}
 
-      {jdOpen && <JDModal onClose={() => setJdOpen(false)} onSubmit={submitJD} />}
-    </div>
+        {jdOpen && <JDModal onClose={() => setJdOpen(false)} onSubmit={submitJD} />}
+      </div>
+    </CompanyProvider>
   )
 }
