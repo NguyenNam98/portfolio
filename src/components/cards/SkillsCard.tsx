@@ -88,7 +88,7 @@ function SkillChipWithProvenance({
         boxShadow,
         font: '500 13px/16px var(--font-sans)',
         color: 'var(--fg-primary)',
-        whiteSpace: 'nowrap',
+        maxWidth: '100%',
         opacity: dim ? 0.32 : 1,
         transform: dim ? 'scale(0.98)' : 'scale(1)',
         transition: 'all var(--motion-med) var(--ease-standard)',
