@@ -221,6 +221,19 @@ body,
 #root {
   height: 100%;
   margin: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+/* App root height — use the dynamic viewport height on browsers that
+   support it. On iOS Safari, plain 100vh includes the area behind the
+   bottom toolbar, so the sticky composer gets hidden under it. 100dvh
+   shrinks/grows with Safari's UI chrome. svh fallback covers older
+   browsers by always using the smaller (toolbar-visible) viewport. */
+.app-root {
+  height: 100vh;       /* fallback */
+  height: 100svh;      /* iOS 15.4+, Chrome 108+ */
+  height: 100dvh;      /* preferred — tracks toolbar show/hide */
 }
 
 body {
@@ -275,7 +288,9 @@ a:focus-visible,
   .chat-mobile-bar { display: flex !important; }
   .chat-top-bar    { display: none !important; }
   .chat-messages   { padding: 20px 16px 200px !important; }
-  .chat-composer   { padding: 14px 16px 18px !important; }
+  .chat-composer   {
+    padding: 14px 16px max(18px, env(safe-area-inset-bottom)) !important;
+  }
   .chat-composer-input { padding: 12px 14px !important; }
 }
 

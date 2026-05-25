@@ -649,8 +649,8 @@ export default function App() {
   return (
     <CompanyProvider company={company}>
       <div
+        className="app-root"
         style={{
-          height: '100vh',
           display: 'flex',
           flexDirection: 'column',
           overflow: 'hidden',
