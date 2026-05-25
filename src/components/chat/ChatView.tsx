@@ -104,7 +104,7 @@ export default function ChatView({
             }}
           >
             {messages.map((m) => (
-              <div key={m.id}>
+              <div key={m.id} style={{ minWidth: 0 }}>
                 <Bubble side={m.side} label={m.label} wide={!!m.wide}>
                   {m.typing ? <TypingDots /> : m.content}
                 </Bubble>

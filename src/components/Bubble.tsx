@@ -21,6 +21,7 @@ export default function Bubble({ side, label, wide = false, children }: Props) {
         gap: 'var(--space-3)',
         alignItems: 'flex-end',
         maxWidth: '100%',
+        minWidth: 0,
         animation: `nam-bubble-${isNam ? 'in-left' : 'in-right'} 420ms var(--ease-emphatic) both`,
       }}
     >
@@ -68,6 +69,7 @@ export default function Bubble({ side, label, wide = false, children }: Props) {
           </div>
         )}
         <div
+          className="bubble-box"
           style={{
             padding: 'var(--space-3) var(--space-4)',
             borderRadius: isNam ? '4px 16px 16px 16px' : '16px 4px 16px 16px',

@@ -251,6 +251,19 @@ a:focus-visible,
   border-radius: 4px;
 }
 
+/* Force every descendant of a bubble to honor the bubble's width.
+   Cards inside the bubble (WhyFitCard, JDMatchCard, PitchCard) use
+   display: grid/flex which defaults to min-width: auto on items —
+   so a 22px heading like "Why I'm a fit for Software Engineer at
+   Magentus" sets a min-content of ~535px and the item overflows the
+   bubble. min-width: 0 lets every nested grid/flex item shrink to its
+   container, and the bubble's overflowWrap: break-word handles the
+   line breaks. */
+.bubble-box,
+.bubble-box * {
+  min-width: 0;
+}
+
 /* Chat layout responsiveness:
    - Desktop (≥720px): sidebar visible, mobile bar hidden, full top bar.
    - Mobile  (<720px): sidebar hidden, slim mobile bar replaces the desktop
