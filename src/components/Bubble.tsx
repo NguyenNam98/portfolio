@@ -47,6 +47,7 @@ export default function Bubble({ side, label, wide = false, children }: Props) {
         style={{
           maxWidth: wide ? '100%' : 'min(560px, calc(100% - 44px))',
           width: wide ? 'calc(100% - 44px)' : 'auto',
+          minWidth: 0,
           display: 'grid',
           gap: 4,
           alignItems: isNam ? 'flex-start' : 'flex-end',
@@ -77,6 +78,8 @@ export default function Bubble({ side, label, wide = false, children }: Props) {
             textWrap: 'pretty',
             width: wide ? '100%' : 'fit-content',
             maxWidth: '100%',
+            minWidth: 0,
+            overflowWrap: 'break-word',
           }}
         >
           {children}

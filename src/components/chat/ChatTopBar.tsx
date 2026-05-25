@@ -21,6 +21,7 @@ export default function ChatTopBar() {
 
   return (
     <header
+      className="chat-top-bar"
       style={{
         display: 'flex',
         justifyContent: 'space-between',

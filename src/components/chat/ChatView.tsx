@@ -83,6 +83,7 @@ export default function ChatView({
         {/* Messages */}
         <div
           ref={scrollRef}
+          className="chat-messages"
           style={{
             flex: 1,
             overflow: 'auto',
@@ -93,11 +94,13 @@ export default function ChatView({
         >
           <div
             style={{
+              width: '100%',
               maxWidth: 980,
               margin: '0 auto',
               display: 'flex',
               flexDirection: 'column',
               gap: 28,
+              minWidth: 0,
             }}
           >
             {messages.map((m) => (
@@ -135,6 +138,7 @@ export default function ChatView({
 
         {/* Composer — sticky bottom, rose-outlined */}
         <div
+          className="chat-composer"
           style={{
             position: 'sticky',
             bottom: 0,
@@ -147,6 +151,7 @@ export default function ChatView({
           }}
         >
           <div
+            className="chat-composer-input"
             style={{
               maxWidth: 884,
               margin: '0 auto',

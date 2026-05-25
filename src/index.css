@@ -252,13 +252,18 @@ a:focus-visible,
 }
 
 /* Chat layout responsiveness:
-   - Desktop (≥720px): sidebar visible, mobile bar hidden.
-   - Mobile  (<720px): sidebar hidden, slim top bar visible.
+   - Desktop (≥720px): sidebar visible, mobile bar hidden, full top bar.
+   - Mobile  (<720px): sidebar hidden, slim mobile bar replaces the desktop
+     top bar so the mobile screen isn't paying for two header rows.
    The mobile bar carries Home + JD access so trapped-in-chat is impossible. */
 .chat-mobile-bar { display: none; }
 @media (max-width: 720px) {
   .chat-sidebar    { display: none !important; }
   .chat-mobile-bar { display: flex !important; }
+  .chat-top-bar    { display: none !important; }
+  .chat-messages   { padding: 20px 16px 200px !important; }
+  .chat-composer   { padding: 14px 16px 18px !important; }
+  .chat-composer-input { padding: 12px 14px !important; }
 }
 
 /* Scrollbar */
