@@ -77,6 +77,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
 
   return (
     <div
+      className="hero-root"
       style={{
         flex: 1,
         minHeight: 0,
@@ -160,6 +161,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
 
       {/* Center */}
       <div
+        className="hero-center"
         style={{
           position: 'relative',
           zIndex: 1,

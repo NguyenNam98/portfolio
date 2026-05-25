@@ -277,6 +277,22 @@ a:focus-visible,
   }
 }
 
+/* Hero scroll on mobile — when the tailored brief stacks below the
+   composer, total content exceeds the viewport. Desktop locks the hero
+   to the viewport (place-items: center + overflow: hidden); on mobile we
+   let the .hero-center area scroll, top-align it, and add bottom padding
+   so the SkillsMarquee footer doesn't sit on top of the last card. */
+@media (max-width: 720px) {
+  .hero-root   { overflow: hidden !important; }
+  .hero-center {
+    place-items: start !important;
+    overflow-y: auto !important;
+    padding-top: 24px !important;
+    padding-bottom: 48px !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 /* Hero status strip — mobile compression.
    At ≤600px the desktop "space-between" two-row split looks broken: the
    left row has 3 items + 2 dots, the right row has "Portfolio / 2026 ·
