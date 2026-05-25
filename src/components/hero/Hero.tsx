@@ -92,6 +92,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
 
       {/* Top status strip */}
       <div
+        className="hero-status-strip"
         style={{
           position: 'relative',
           zIndex: 1,
@@ -104,9 +105,13 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
           borderBottom: '1px solid var(--border-subtle)',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
+        <div
+          className="hero-status-left"
+          style={{ display: 'flex', alignItems: 'center', gap: 18, flexWrap: 'wrap' }}
+        >
           <StatusPill label={statusLabel} />
           <span
+            className="hero-status-sep"
             style={{
               font: 'var(--font-mono-xs)',
               color: 'var(--fg-tertiary)',
@@ -117,6 +122,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
           </span>
           <LiveClock />
           <span
+            className="hero-status-sep"
             style={{
               font: 'var(--font-mono-xs)',
               color: 'var(--fg-tertiary)',
@@ -136,6 +142,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
           </span>
         </div>
         <div
+          className="hero-status-right"
           style={{
             display: 'flex',
             alignItems: 'center',
