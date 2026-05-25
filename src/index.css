@@ -266,6 +266,17 @@ a:focus-visible,
   .chat-composer-input { padding: 12px 14px !important; }
 }
 
+/* Hero tailored variant — collapse the 2-column layout below 900px.
+   The right column is the "Why I fit" cards (3 reasons + match badge);
+   on phones/tablets it sits below the name + composer instead of being
+   crammed into half the viewport, where it overlapped the hero text. */
+@media (max-width: 900px) {
+  .hero-grid-tailored {
+    grid-template-columns: 1fr !important;
+    width: min(880px, 100%) !important;
+  }
+}
+
 /* Hero status strip — mobile compression.
    At ≤600px the desktop "space-between" two-row split looks broken: the
    left row has 3 items + 2 dots, the right row has "Portfolio / 2026 ·

@@ -171,6 +171,7 @@ export default function Hero({ onSubmit, onAction, onPasteJD }: Props) {
         }}
       >
         <div
+          className={hasTailoredBrief ? 'hero-grid hero-grid-tailored' : 'hero-grid'}
           style={{
             width: hasTailoredBrief ? 'min(1280px, 100%)' : 'min(880px, 100%)',
             display: 'grid',
