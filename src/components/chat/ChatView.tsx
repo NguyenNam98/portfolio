@@ -86,7 +86,9 @@ export default function ChatView({
           className="chat-messages"
           style={{
             flex: 1,
-            overflow: 'auto',
+            overflowY: 'auto',
+            overflowX: 'hidden',
+            overscrollBehavior: 'contain',
             padding: '32px 48px 220px',
             position: 'relative',
             zIndex: 1,

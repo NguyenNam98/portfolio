@@ -271,10 +271,16 @@ a:focus-visible,
    Magentus" sets a min-content of ~535px and the item overflows the
    bubble. min-width: 0 lets every nested grid/flex item shrink to its
    container, and the bubble's overflowWrap: break-word handles the
-   line breaks. */
+   line breaks. overflow-x: clip on the box is a last-resort guard
+   against any descendant (project card chip rows, etc.) that still
+   manages to extend past the bubble — clip (not hidden) so it doesn't
+   create a new scroll container that intercepts touch pans. */
 .bubble-box,
 .bubble-box * {
   min-width: 0;
+}
+.bubble-box {
+  overflow-x: clip;
 }
 
 /* Chat layout responsiveness:
