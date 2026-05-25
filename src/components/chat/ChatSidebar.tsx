@@ -38,7 +38,7 @@ export default function ChatSidebar({ onResetHome }: Props) {
 
   return (
     <aside
-      className="cp-sidebar"
+      className="chat-sidebar"
       style={{
         width: 340,
         flexShrink: 0,
